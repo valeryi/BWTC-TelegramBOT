@@ -1,11 +1,11 @@
 import mongoose, { Schema } from "mongoose";
 
-export interface User {
-    telegram_id: Number,
-    first_name: String,
-    last_name: String,
-    username: String,
-    language_code: String
+export interface IUser {
+    telegram_id: number,
+    first_name: string,
+    last_name: string,
+    username: string,
+    language_code: string
 }
 
 const userSchema: Schema = new mongoose.Schema({
@@ -28,7 +28,7 @@ const userSchema: Schema = new mongoose.Schema({
     },
     username: {
         type: String,
-        default: null,
+        default: 'uk',
         trim: true,
     },
     language_code: {

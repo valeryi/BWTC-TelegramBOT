@@ -1,0 +1,21 @@
+{
+    "scenes": {
+        "start": {
+            "greeting": "Hey, ",
+            "welcome": "Welcome to BWTC Bot!",
+            "backToHome": "What's next? 👇"
+        },
+        "settings": {
+            "adjustMe": "Adjust me 👇",
+            "language": {
+                "changeLanguage": "🇬🇧 Change language",
+                "pickLanguage": "Pick any of avaliable languages below",
+                "updateAlert": "Language updated!",
+                "updateErrorAlert": "Couldn't update language"
+            }
+        }
+    },
+    "keyboards": {
+        "home": "⬅ back Home"
+    }
+}

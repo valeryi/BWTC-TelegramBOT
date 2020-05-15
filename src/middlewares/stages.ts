@@ -10,6 +10,7 @@ import cartStepOne from '../controllers/shop/steps/cartStepOne'
 import cartStepTwo from '../controllers/shop/steps/cartStepTwo';
 import cartStepThree from '../controllers/shop/steps/cartStepThree';
 import cartStepFour from '../controllers/shop/steps/cartStepFour';
+import settingsScene from '../controllers/settings';
 
 const stage = new Stage([
     startScene,
@@ -18,7 +19,8 @@ const stage = new Stage([
     cartStepOne,
     cartStepTwo,
     cartStepThree,
-    cartStepFour
+    cartStepFour,
+    settingsScene
 ]);
 
 const stagesMiddleware = (bot: Telegraf<TelegrafContext>) => {
