@@ -3,6 +3,7 @@ import Scene from 'telegraf/scenes/base';
 import { TelegrafContext } from 'telegraf/typings/context';
 import { CoffeeListNavigation, MainNavigation } from '../../utils/keyboards';
 import { ColombiaCategory, BrazilCategory, BlendCategory, getProductDetails } from './actions';
+import { ITelegramContext } from '../start';
 
 const { leave } = Stage;
 export const shop = new Scene('shop');
@@ -21,9 +22,9 @@ shop.hears('Brazil', BrazilCategory);
 shop.hears('Blend', BlendCategory);
 
 //@ts-ignore
-shop.hears('⬅ На головну', async (ctx: TelegrafContext) => {
+shop.hears('⬅ На головну', async (ctx: ITelegramContext) => {
     ctx.deleteMessage();
-    await ctx.reply('Ось головне меню 👇', (MainNavigation() as any).draw());
+    await ctx.reply('Ось головне меню 👇', (MainNavigation(ctx) as any).draw());
 });
 
 shop.action(/productDetails/i, getProductDetails);

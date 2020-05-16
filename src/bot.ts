@@ -1,7 +1,7 @@
 require("dotenv").config();
 
 import { Telegraf } from "telegraf";
-import { TelegrafContext } from "telegraf/typings/context";
+// import { TelegrafContext } from "telegraf/typings/context";
 import { database } from "./db/mongoose";
 import { applyMiddlewares } from "./middlewares";
 import { sysLog } from "./utils/winston";
@@ -19,10 +19,25 @@ database.init().then(() => {
   applyMiddlewares(bot);
 
   //@ts-ignore
-  bot.start(getUserInfo, updateUserActivity, async (ctx: ITelegramContext) => ctx.scene.enter("start"));
+  bot.start(getUserInfo, updateUserActivity, async (ctx: ITelegramContext) =>
+    ctx.scene.enter("start")
+  );
 
-  //@ts-ignore
-  bot.command('settings', getUserInfo, updateUserActivity, async (ctx: ITelegramContext) => ctx.scene.enter("settings"));
+  bot.hears(
+    /(Settings)|(Настройки)|(Налаштування)/i,
+    //@ts-ignore
+    getUserInfo,
+    updateUserActivity,
+    async (ctx: ITelegramContext) => ctx.scene.enter("settings")
+  );
+
+   bot.hears(
+     /(Contacts)|(Контакты)|(Контакти)/i,
+     //@ts-ignore
+     getUserInfo,
+     updateUserActivity,
+     async (ctx: ITelegramContext) => ctx.scene.enter("contacts")
+   );
 
   //@ts-ignore
   // bot.hears("🤟 Магазин", updateUserTimestamp, (ctx: TelegrafContext) =>
@@ -30,10 +45,10 @@ database.init().then(() => {
   //   ctx.scene.enter("shop")
   // );
 
-  bot.command("saveme", async (ctx: TelegrafContext) => {
+  bot.command("saveme", async (ctx: ITelegramContext) => {
     console.debug(ctx, "User uses /saveme command");
 
-    ctx.reply("Ось головне меню 👇", (MainNavigation() as any).draw());
+    ctx.reply("Ось головне меню 👇", MainNavigation(ctx).draw());
   });
 
   bot.launch().then(() => sysLog.info("Telegram BOT launched"));

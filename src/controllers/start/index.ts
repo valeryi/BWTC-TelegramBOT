@@ -16,7 +16,7 @@ start.enter(async (ctx: ITelegramContext) => {
     .reply(`${ctx.i18n.t("scenes.start.greeting")} ${ctx.from?.first_name}!`)
     .then(() => ctx.reply(ctx.i18n.t("scenes.start.welcome")))
     .then(() =>
-      ctx.reply("З чого розпочнемо? 👇", (MainNavigation() as any).draw())
+      ctx.reply("З чого розпочнемо? 👇", (MainNavigation(ctx) as any).draw())
     );
 
   await ctx.scene.leave();

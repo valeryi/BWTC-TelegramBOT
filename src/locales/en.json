@@ -16,6 +16,14 @@
         }
     },
     "keyboards": {
-        "home": "⬅ back Home"
+        "home": "⬅ back Home",
+        "main": {
+            "shop": "🤟 Shop",
+            "cart": "🛒 Cart",
+            "cooperation": "🤝 Work",
+            "shops": "📌 Buy",
+            "settings": "⚙ Settings",
+            "contacts": "📲 Contacts"
+        }
     }
 }

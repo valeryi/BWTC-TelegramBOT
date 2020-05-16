@@ -56,7 +56,7 @@ settings.hears(
     logger.debug("Hears back home action");
     const i18n = ctx.i18n;
 
-    ctx.reply(i18n.t(`scenes.start.backToHome`), MainNavigation().draw());
+    ctx.reply(i18n.t(`scenes.start.backToHome`), MainNavigation(ctx).draw());
   }
 );
 settings.action(/changeLanguage/i, getUserInfo, changeLanguageAction);
