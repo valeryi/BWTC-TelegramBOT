@@ -5,14 +5,20 @@ import { getTemplate } from '../../templates';
 
 
 export function ColombiaCategory(ctx: TelegrafContext) {
-    ctx.deleteMessage();
+    // ctx.deleteMessage();
+
+    const template = getTemplate('colombia_details',[]);
+    const toCartAction = new Keyboard({inline: true}).add('toCard:colombia');
+
+    ctx.replyWithHTML(template, toCartAction.draw());
+
 
     //@ts-ignore
-    const colombia = ctx.session.products.filter(product => product.category.toLowerCase() === 'colombia');
+    // const colombia = ctx.session.products.filter(product => product.category.toLowerCase() === 'colombia');
 
-    const ColombiaList = getProductList(colombia);
+    // const ColombiaList = getProductList(colombia);
 
-    ctx.reply('Наша Колумбія 👇', ColombiaList.draw());
+    // ctx.reply('Наша Колумбія 👇', ColombiaList.draw());
 }
 
 export function BrazilCategory(ctx: TelegrafContext) {

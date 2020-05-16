@@ -5,9 +5,9 @@ import { IProduct } from '../../models/product.model';
 export function getProductList(products: IProduct[]) {
 
     const options = {
-        inline: true, // default
-        duplicates: false, // default
-        newline: false, // default
+        inline: true,
+        duplicates: false, 
+        newline: false,
     };
 
     const ProductList = new Keyboard(options);

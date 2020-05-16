@@ -13,6 +13,17 @@
                 "updateAlert": "Language updated!",
                 "updateErrorAlert": "Couldn't update language"
             }
+        },
+        "shop": {
+            "choose": "Choose 👇",
+            "toCart": "To Cart",
+            "weightIn": "",
+            "cancel": "Cancel",
+            "question_pack": "Step 1: Choose the pack",
+            "question_grind": "Step 2: Grind?",
+            "question_for": "Step 3: How are you gonna make your coffee?",
+            "final_step": "Put to cart!",
+            "pickMore": "Pick some more!"
         }
     },
     "keyboards": {

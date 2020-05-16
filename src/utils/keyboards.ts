@@ -20,12 +20,12 @@ export const MainNavigation = (ctx: ITelegramContext) => {
 
 }
 
-export const CoffeeListNavigation = () => {
+export const CoffeeListNavigation = (ctx: ITelegramContext) => {
 
     const options = {
-        inline: false, // default
-        duplicates: false, // default
-        newline: false, // default
+        inline: false,
+        duplicates: false,
+        newline: false,
     };
 
     const CoffeeList = new Keyboard(options);
@@ -34,7 +34,7 @@ export const CoffeeListNavigation = () => {
         .add('Colombia')
         .add('Brazil')
         .add('Blend')
-        .add('⬅ На головну');
+        .add(ctx.i18n.t('keyboards.home'));
 
 }
 
