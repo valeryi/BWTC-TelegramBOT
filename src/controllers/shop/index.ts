@@ -1,63 +1,21 @@
-import Stage from "telegraf/stage";
 import Scene from "telegraf/scenes/base";
 import { ITelegramContext } from "../start";
 import { TelegrafContext } from "telegraf/typings/context";
 import { MainNavigation, CoffeeListNavigation } from "../../utils/keyboards";
 import { getUserInfo } from "../../middlewares/functional/getUserInfo";
 import { getTemplate } from "../../templates";
-// import { ColombiaCategory } from "./actions";
-// import { getTemplate } from "../../templates";
-import Keyboard from "telegraf-keyboard";
 import { logger } from "../../utils/winston";
-// import { getActionParams } from "../../utils/_helpers";
+import { initCart, provideCartProductID } from "./_helpers";
 
-const { leave } = Stage;
+import Keyboard from "telegraf-keyboard";
+
 const shop = new Scene("shop");
 
-shop.enter(async (ctx: ITelegramContext) => {
-  console.log("entering shop");
-
-  const questionnaire = {
-    cart_items: [],
-    active: {
-      index: 0,
-      product: null,
-      questions: [
-        {
-          text: "Step 1",
-          keyboard: null,
-          answer: null,
-          handler: (ctx: ITelegramContext) => {
-            ctx.reply(
-              `handler: ${JSON.stringify(
-                //@ts-ignore
-                ctx.session.questionnaire.active.index
-              )}`
-            );
-          },
-        },
-        {
-          text: "Step 2",
-          keyboard: null,
-          answer: null,
-        },
-        {
-          text: "Step 3",
-          keyboard: null,
-          answer: null,
-        },
-      ],
-    },
-    to: () => {},
-    final: async (ctx: ITelegramContext) => {
-      //@ts-ignore
-      console.log(ctx.session.questionnaire);
-      await ctx.scene.enter("shop");
-    },
-  };
-
+shop.enter(getUserInfo, async (ctx: ITelegramContext) => {
+  logger.debug("entering shop scene");
+  initCart(ctx);
   //@ts-ignore
-  ctx.session.questionnaire = questionnaire;
+  console.log(ctx.session.cart);
 
   await ctx.reply(
     ctx.i18n.t("scenes.shop.pickMore"),
@@ -65,9 +23,7 @@ shop.enter(async (ctx: ITelegramContext) => {
   );
 });
 
-shop.leave(async (_: TelegrafContext) => console.log("leaving shop"));
-
-shop.command("saveme", leave());
+shop.leave(async (_: TelegrafContext) => logger.debug("leaving shop scene"));
 
 //@ts-ignore
 shop.hears(
@@ -86,19 +42,9 @@ shop.action(
   getUserInfo,
   (ctx: ITelegramContext) => {
     const active_product = ctx.match?.input.toLowerCase();
-    //@ts-ignore
-    const questionnaire: any = ctx.session.questionnaire;
+    provideCartProductID(ctx, active_product as string);
 
-    questionnaire.active.product = active_product;
-
-    console.log(questionnaire);
-
-    logger.debug(
-      "Created cart in session",
-      //@ts-ignore
-      ctx.session.questionnaire.toString()
-    );
-    ctx.scene.enter("questionnaire");
+    ctx.scene.enter("tocart1");
   }
 );
 

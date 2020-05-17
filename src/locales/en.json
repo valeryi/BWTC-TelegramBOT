@@ -21,9 +21,12 @@
             "cancel": "Cancel",
             "question_pack": "Step 1: Choose the pack",
             "question_grind": "Step 2: Grind?",
+            "question_grind_answer1": "Grind",
+            "question_grind_answer2": "Don't grind",
             "question_for": "Step 3: How are you gonna make your coffee?",
             "final_step": "Put to cart!",
-            "pickMore": "Pick some more!"
+            "pickMore": "Pick some more!",
+            "addedToCartMessage": " added to cart"
         }
     },
     "keyboards": {

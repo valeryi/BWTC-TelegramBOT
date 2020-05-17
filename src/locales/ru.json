@@ -21,9 +21,12 @@
             "cancel": "Отмена",
             "question_pack": "Этап 1: Выберете нужную фасовку",
             "question_grind": "Этап 2: Смолоть",
+            "question_grind_answer1": "Молоть",
+            "question_grind_answer2": "Не молоть",
             "question_for": "Этап 3: Как Вы будете готовить кофе?",
             "final_step": "Добавлино в корзину!",
-            "pickMore": "Возьми еще!"           
+            "pickMore": "Возьми еще!",
+            "addedToCartMessage": " добавлено в корзину"      
         }
     },
     "keyboards": {

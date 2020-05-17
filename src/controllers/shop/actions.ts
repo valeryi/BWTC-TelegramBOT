@@ -1,72 +1,58 @@
-import { TelegrafContext } from "telegraf/typings/context";
-import Keyboard from 'telegraf-keyboard';
-import { getProductList } from "./_helpers";
-import { getTemplate } from '../../templates';
+// import { ITelegramContext } from "../start";
+// import Keyboard from "telegraf-keyboard";
 
+// export async function questionHandlerPack(ctx: ITelegramContext) {
+//   // @ts-ignore
+//   ctx.i18n.locale(ctx.session.user.language_code);
+//   const packOptions = new Keyboard().add("250", "500", "1000");
 
-export function ColombiaCategory(ctx: TelegrafContext) {
-    // ctx.deleteMessage();
+//   await ctx.reply(ctx.i18n.t("scenes.shop.question_pack"), packOptions.draw());
+//   await ctx.reply(ctx.i18n.t("scenes.shop.choose"), packOptions.draw());
 
-    const template = getTemplate('colombia_details',[]);
-    const toCartAction = new Keyboard({inline: true}).add('toCard:colombia');
+//   //@ts-ignore
+//   ctx.session.questionnaire.active.index++;
+//   //@ts-ignore
+//   return ctx.wizard.next();
+// }
 
-    ctx.replyWithHTML(template, toCartAction.draw());
+// export async function questionHandlerGrind(ctx: ITelegramContext) {
+//   // @ts-ignore
+//   ctx.i18n.locale(ctx.session.user.language_code);
+//   const grindOptions = new Keyboard().add(
+//     ctx.i18n.t("scenes.shop.question_grind_answer1"),
+//     ctx.i18n.t("scenes.shop.question_grind_answer2")
+//   );
 
+//   await ctx.reply(
+//     ctx.i18n.t("scenes.shop.question_grind"),
+//     grindOptions.draw()
+//   );
+//   await ctx.reply(ctx.i18n.t("scenes.shop.choose"), grindOptions.draw());
 
-    //@ts-ignore
-    // const colombia = ctx.session.products.filter(product => product.category.toLowerCase() === 'colombia');
+//   //@ts-ignore
+//   ctx.session.questionnaire.active.index++;
+//   //@ts-ignore
+//   return ctx.wizard.next();
+// }
 
-    // const ColombiaList = getProductList(colombia);
+// export async function questionHandlerFor(ctx: ITelegramContext) {
+//   // @ts-ignore
+//   ctx.i18n.locale(ctx.session.user.language_code);
+//   const forOptions = new Keyboard();
+//   //@ts-ignore
+//   const index = ctx.session.questionnaire.active.index;
+//   //@ts-ignore
+//   const questions = ctx.session.questionnaire.active.questions;
+//   //@ts-ignore
+//   const previous = ctx.session.questionnaire.active.questions[index - 1];
 
-    // ctx.reply('Наша Колумбія 👇', ColombiaList.draw());
-}
-
-export function BrazilCategory(ctx: TelegrafContext) {
-    ctx.deleteMessage();
-
-    //@ts-ignore
-    const brazil = ctx.session.products.filter(product => product.category.toLowerCase() === 'brazil');
-
-    const BrazilList = getProductList(brazil);
-
-    ctx.reply('Наша Бразілія 👇', BrazilList.draw());
-}
-
-export function BlendCategory(ctx: TelegrafContext) {
-    ctx.deleteMessage();
-
-    //@ts-ignore
-    const blend = ctx.session.products.filter(product => product.category.toLowerCase() === 'blend');
-
-    const blendList = getProductList(blend);
-
-    ctx.reply('Наш Бленд> 👇', blendList.draw());
-}
-
-export async function getProductDetails(ctx: TelegrafContext) {
-
-    const match = ctx.match?.input;
-    const id = (match as string).split(' ')[1];
-
-    //@ts-ignore
-    const details = ctx.session.products.filter(product => product._id == id)[0];
-
-    const product_card = getTemplate('product_details', {
-        product_name: details.name,
-        product_id: details._id,
-        product_price: details.price / 100
-    })
-
-    const options = {
-        inline: true,
-        duplicates: false,
-        newline: false,
-    };
-
-    const toCart = new Keyboard(options);
-
-    toCart.add(`У кошик:toCart ${details._id}`);
-
-    await ctx.replyWithHTML(product_card, toCart.draw());
-
-}
+//   if (previous.answer === ctx.i18n.t("scenes.shop.question_grind_answer1")) {
+//     await ctx.reply(ctx.i18n.t("scenes.shop.question_for"), forOptions.clear());
+//     //@ts-ignore
+//     ctx.session.questionnaire.active.index++;
+//   } else {
+//     await ctx.scene.enter("shop");
+//     //@ts-ignore
+//     return ctx.scene.leave();
+//   }
+// }

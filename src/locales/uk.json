@@ -21,9 +21,12 @@
             "cancel": "Скасувати",
             "question_pack": "Єтап 1: Веберіть потрубну фасовку",
             "question_grind": "Єтап 2: Змелювати?",
+            "question_grind_answer1": "Молоти",
+            "question_grind_answer2": "Не молоти",
             "question_for": "Єтап 3: Як Ви будете готувати каву?",
             "final_step": "Додано у кошик!",
-            "pickMore": "Візьми ще!"
+            "pickMore": "Візьми ще!",
+            "addedToCartMessage": " додано у кошик"
         }
     },
     "keyboards": {
