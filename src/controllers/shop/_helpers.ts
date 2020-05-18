@@ -59,7 +59,7 @@ export function addActive(
   );
 }
 
-export function clearActive() {
+export function clearActive(ctx: ITelegramContext) {
   if (
     //@ts-ignore
     !ctx.session.cart.active ||
@@ -68,12 +68,12 @@ export function clearActive() {
     //@ts-ignore
     ctx.session.cart.active === undefined
   )
-    logger.debug(
-      "Cart: cart doesn't exist"
-    );
+    logger.debug("Cart: cart doesn't exist");
 
   //@ts-ignore
   ctx.session.cart.active.details = [];
+  //@ts-ignore
+  ctx.session.cart.active.product_id = null;
 
   logger.debug(`Cart: active section in cart cleared out`);
 }

@@ -2,8 +2,9 @@ import Scene from "telegraf/scenes/base";
 import { ITelegramContext } from "../start";
 import { getUserInfo } from "../../middlewares/functional/getUserInfo";
 import Keyboard from "telegraf-keyboard";
-import { addActive } from "./_helpers";
-import { CoffeeListNavigation } from "../../utils/keyboards";
+import { addActive, clearActive } from "./_helpers";
+import { logger } from "../../utils/winston";
+// import { CoffeeListNavigation } from "../../utils/keyboards";
 
 //QUESTION 1
 const tocart1 = new Scene("tocart1");
@@ -83,9 +84,32 @@ tocart3.enter(getUserInfo, async (ctx: ITelegramContext) => {
 const finaltocart = new Scene("finaltocart");
 
 finaltocart.enter(getUserInfo, async (ctx: ITelegramContext) => {
+  //@ts-ignore
+  const products = ctx.session.products;
+  //@ts-ignore
+  const activeProduct = ctx.session.cart.active;
+  let price: number = 0;
+
+  if (activeProduct.product_id === "colombia") {
+    price = activeProduct.details[0].answer === 0.25 ? 170 : 640;
+  }
+
+  if (activeProduct.product_id === "brazil") {
+    price = activeProduct.details[0].answer === 0.25 ? 150 : 540;
+  }
+
+  if (activeProduct.product_id === "blend") {
+    price = activeProduct.details[0].answer === 0.25 ? 150 : 540;
+  }
+
+  const ConfirmPrice = new Keyboard()
+    .add(`${ctx.i18n.t("keyboards.addToCart")}`)
+    .add(`${ctx.i18n.t("keyboards.cancel")}`)
+    .add(`${ctx.i18n.t("keyboards.buy")}`);
+
   ctx.reply(
-    `${ctx.i18n.t("scenes.shop.addedToCartMessage")}`,
-    CoffeeListNavigation(ctx).draw()
+    `${ctx.i18n.t("scenes.shop.confirmPrice")} : ${price}`,
+    ConfirmPrice.draw()
   );
 
   finaltocart.on("text", getUserInfo, (ctx: ITelegramContext) => {
@@ -94,4 +118,90 @@ finaltocart.enter(getUserInfo, async (ctx: ITelegramContext) => {
   });
 });
 
-export default [tocart1, tocart2, tocart3, finaltocart];
+//QUESTION 1
+const enterAmount = new Scene("enterAmount");
+
+enterAmount.enter(getUserInfo, async (ctx: ITelegramContext) => {
+  ctx.reply(ctx.i18n.t("scenes.shop.addAmount"), new Keyboard().clear());
+
+  enterAmount.on("text", getUserInfo, async (ctx: ITelegramContext) => {
+    //@ts-ignore
+    const products = ctx.session.products;
+    //@ts-ignore
+    const activeProduct = ctx.session.cart.active;
+    let price: number = 0;
+
+    if (activeProduct.product_id === "colombia") {
+      price = activeProduct.details[0].answer === 0.25 ? 170 : 640;
+    }
+
+    if (activeProduct.product_id === "brazil") {
+      price = activeProduct.details[0].answer === 0.25 ? 150 : 540;
+    }
+
+    if (activeProduct.product_id === "blend") {
+      price = activeProduct.details[0].answer === 0.25 ? 150 : 540;
+    }
+    addActive(ctx, "amount", ctx.message?.text as string);
+
+    const ready = {
+      product: {
+        id: products.id,
+        name: products.name,
+        price,
+        weight: activeProduct.details[0].answer,
+      },
+      details: {
+        ...activeProduct,
+      },
+      //@ts-ignore
+      client: ctx.session.user,
+    };
+
+    //@ts-ignore
+    ctx.session.cart.items.push(ready);
+    clearActive(ctx);
+
+    await informManager(ctx, 476963932, ready);
+
+    //@ts-ignore
+    console.log(ctx.session.cart);
+
+    ctx.reply(ctx.i18n.t("scenes.shop.addedToCartMessage"));
+
+    //@ts-ignore
+    return ctx.scene.enter("shop");
+  });
+});
+
+export default [tocart1, tocart2, tocart3, enterAmount, finaltocart];
+
+finaltocart.hears(
+  /(Add)|(Додати)|(Добавить)/i,
+  getUserInfo,
+  async (ctx: ITelegramContext) => ctx.scene.enter("enterAmount")
+
+);
+finaltocart.hears(
+  /(Cancel)|(Відмінити)|(Отметить)/i,
+  getUserInfo,
+  async (ctx: ITelegramContext) => {
+    //@ts-ignore
+    ctx.session.cart.active = {};
+
+    await ctx.reply(`${ctx.i18n.t("keyboards.cancelled")} 😓`);
+    await ctx.scene.enter("shop");
+  }
+);
+// finaltocart.hears(/(Buy)|(Оплатити)|(Оплатить)/i, (ctx: ITelegramContext) => {
+// });
+
+async function informManager(
+  ctx: ITelegramContext,
+  manager_id: number,
+  order: any
+) {
+  // Set proper style
+  await ctx.telegram.sendMessage(manager_id, "test");
+  logger.debug("informed manager about order: " + JSON.stringify(order));
+}

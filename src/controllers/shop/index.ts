@@ -14,8 +14,6 @@ const shop = new Scene("shop");
 shop.enter(getUserInfo, async (ctx: ITelegramContext) => {
   logger.debug("entering shop scene");
   initCart(ctx);
-  //@ts-ignore
-  console.log(ctx.session.cart);
 
   await ctx.reply(
     ctx.i18n.t("scenes.shop.pickMore"),
@@ -25,7 +23,6 @@ shop.enter(getUserInfo, async (ctx: ITelegramContext) => {
 
 shop.leave(async (_: TelegrafContext) => logger.debug("leaving shop scene"));
 
-//@ts-ignore
 shop.hears(
   /(⬅ back Home)|(⬅ На главную)|(⬅ На головну)/i,
   getUserInfo,

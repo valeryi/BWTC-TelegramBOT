@@ -26,11 +26,17 @@
             "question_for": "Step 3: How are you gonna make your coffee?",
             "final_step": "Put to cart!",
             "pickMore": "Pick some more!",
-            "addedToCartMessage": " added to cart"
+            "addedToCartMessage": " added to cart",
+            "confirmPrice": "It costs",
+            "addAmount": "Enter how many packs you need"
         }
     },
     "keyboards": {
         "home": "⬅ back Home",
+        "addToCart": "Add",
+        "cancel": "Cancel",
+        "cancelled": "Cancelled",
+        "buy": "Buy",
         "main": {
             "shop": "🤟 Shop",
             "cart": "🛒 Cart",

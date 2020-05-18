@@ -22,13 +22,7 @@ export const MainNavigation = (ctx: ITelegramContext) => {
 
 export const CoffeeListNavigation = (ctx: ITelegramContext) => {
 
-    const options = {
-        inline: false,
-        duplicates: false,
-        newline: false,
-    };
-
-    const CoffeeList = new Keyboard(options);
+    const CoffeeList = new Keyboard();
 
     return CoffeeList
         .add('Colombia')
