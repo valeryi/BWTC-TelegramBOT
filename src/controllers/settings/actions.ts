@@ -6,12 +6,10 @@ import { logger } from "../../utils/winston";
 export const changeLanguageAction = async (ctx: ITelegramContext) => {
   const i18n = ctx.i18n;
   const language_code = getActionParams(ctx)[0];
-  // console.log
   const session: any = ctx.session;
-  let updated: IUser = {telegram_id: 454354} as IUser;
 
   try {
-    updated = await UserModel.findOneAndUpdate(
+    await UserModel.findOneAndUpdate(
       { telegram_id: session.user.telegram_id },
       { language_code },
       { new: true }
@@ -27,12 +25,7 @@ export const changeLanguageAction = async (ctx: ITelegramContext) => {
     );
   }
 
-
-
   await ctx.answerCbQuery(i18n.t("scenes.settings.language.updateAlert"));
   
-  updated;
-  //@ts-ignore
-  // i18n.locale(updated?.language_code);
   await ctx.scene.reenter();
 };

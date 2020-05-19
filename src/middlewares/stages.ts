@@ -4,6 +4,7 @@ import Stage from "telegraf/stage";
 
 import startScene from "../controllers/start";
 import shopScene from "../controllers/shop";
+import homeScene from "../controllers/home";
 // import cartScene from "../controllers/cart";
 import settingsScene from "../controllers/settings";
 import contactsScene from "../controllers/contacts";
@@ -15,6 +16,7 @@ export const stage = new Stage([
   settingsScene,
   contactsScene,
   ...toCartQ,
+  homeScene,
 ]);
 
 const stagesMiddleware = (bot: Telegraf<TelegrafContext>) => {

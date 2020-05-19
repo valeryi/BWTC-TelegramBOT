@@ -17,9 +17,9 @@ database.init().then(() => {
   applyMiddlewares(bot);
 
   //@ts-ignore
-  bot.start(getUserInfo, updateUserActivity, async (ctx: ITelegramContext) =>
-    ctx.scene.enter("start")
-  );
+  bot.start(getUserInfo, updateUserActivity, async (ctx: ITelegramContext) => {
+    ctx.scene.enter("start");
+  });
 
   bot.hears(
     /(Settings)|(Настройки)|(Налаштування)/i,
@@ -50,6 +50,9 @@ database.init().then(() => {
   );
 
   //@ts-ignore
+  bot.command("home", async (ctx: ITelegramContext) => ctx.scene.enter("home"));
+
+  //@ts-ignore
   bot.command("saveme", async (ctx: ITelegramContext) => {
     console.debug(ctx, "User uses /saveme command");
 
@@ -57,4 +60,26 @@ database.init().then(() => {
   });
 
   bot.launch().then(() => sysLog.info("Telegram BOT launched"));
+
+  process.on("uncaughtException", (err) => {
+    sysLog.error(`uncaughtException: ${err.message}`);
+    bot.telegram.sendMessage(
+      476963932,
+      `uncaughtException: "${err}" at /${Date.now()}/`
+    );
+  });
+
+  process.on("exit", () => {
+    sysLog.debug(`exiting process at /${Date.now()}/`);
+    bot.telegram.sendMessage(
+      476963932,
+      `Exiting process of TelegramBOT - BWTC at ${Date.now()}`
+    );
+    process.exit(1);
+  });
+
+  //@ts-ignore
+  bot.email(/@/i, (ctx: ITelegramContext) => {
+    ctx.reply("email");
+  });
 });

@@ -1,5 +1,8 @@
 {
     "scenes": {
+        "common": {
+            "commandNotDetected": " This command doesn't work here. Use your keyboard, please, to navigate around."
+        },
         "start": {
             "greeting": "Hey, ",
             "welcome": "Welcome to BWTC Bot!",
@@ -15,28 +18,40 @@
             }
         },
         "shop": {
+            "validation": {
+                "notNumber1": "Entered input is not a valid number",
+                "notNumber2": "Try again, please",
+                "notNumber3": "Enter the amount 👇"
+            },
             "choose": "Choose 👇",
             "toCart": "To Cart",
             "weightIn": "",
             "cancel": "Cancel",
-            "question_pack": "Step 1: Choose the pack",
             "question_grind": "Step 2: Grind?",
-            "question_grind_answer1": "Grind",
-            "question_grind_answer2": "Don't grind",
+            "question_grind_answer1": "Yes",
+            "question_grind_answer2": "No",
             "question_for": "Step 3: How are you gonna make your coffee?",
             "final_step": "Put to cart!",
-            "pickMore": "Pick some more!",
+            "pickMore": "Our coffee 👇",
             "addedToCartMessage": " added to cart",
             "confirmPrice": "It costs",
-            "addAmount": "Enter how many packs you need"
+            "addAmount": "Step 1: Enter how many packs you need",
+            "toCartConfirmation": {
+                "message1": "You've just picked",
+                "message2": "It costs", 
+                "message3": "Would you like to add it to your cart or pay right now? 🙄",
+                "items": "item(s)",
+                "for": "for"
+            }
         }
     },
     "keyboards": {
-        "home": "⬅ back Home",
-        "addToCart": "Add",
+        "home": "🏠 back Home",
+        "back": "⬅ back",
+        "addToCart": "🛒 Add",
         "cancel": "Cancel",
         "cancelled": "Cancelled",
-        "buy": "Buy",
+        "buy": "💳 Buy",
         "main": {
             "shop": "🤟 Shop",
             "cart": "🛒 Cart",

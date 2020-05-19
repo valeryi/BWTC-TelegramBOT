@@ -1,35 +1,7 @@
-import Keyboard from "telegraf-keyboard";
 import { IProduct } from "../../models/product.model";
 import { ITelegramContext } from "../start";
 import { logger } from "../../utils/winston";
-
-export type ICart = {
-  items: object[];
-  active: {
-    product_id: string;
-    details: object[];
-  };
-};
-
-export function getProductList(products: IProduct[]) {
-  const options = {
-    inline: true,
-    duplicates: false,
-    newline: false,
-  };
-
-  const ProductList = new Keyboard(options);
-
-  products.forEach((product) => {
-    ProductList.add(
-      `${product.name} ${product.weight}кг - ${
-        product.price / 100
-      }грн:productDetails ${product._id}`
-    );
-  });
-
-  return ProductList;
-}
+import { ICart } from "../../models/cart.model";
 
 export function addActive(
   ctx: ITelegramContext,
@@ -59,6 +31,18 @@ export function addActive(
   );
 }
 
+
+
+export async function informManager(
+  ctx: ITelegramContext,
+  manager_id: number,
+  order: any
+) {
+  // Set proper style
+  await ctx.telegram.sendMessage(manager_id, "test");
+  logger.debug("informed manager about order: " + JSON.stringify(order));
+}
+
 export function clearActive(ctx: ITelegramContext) {
   if (
     //@ts-ignore
@@ -78,17 +62,19 @@ export function clearActive(ctx: ITelegramContext) {
   logger.debug(`Cart: active section in cart cleared out`);
 }
 
-export function provideCartProductID(ctx: ITelegramContext, id: string) {
+export async function provideCartProduct(ctx: ITelegramContext, product: IProduct) {
   if (
     //@ts-ignore
-    ctx.session.cart.active.product_id === "" ||
+    ctx.session.cart.active.product ||
     //@ts-ignore
-    ctx.session.cart.active.product_id === null ||
+    ctx.session.cart.active.product === "" ||
     //@ts-ignore
-    ctx.session.cart.active.product_id === undefined
+    ctx.session.cart.active.product === null ||
+    //@ts-ignore
+    ctx.session.cart.active.product === undefined
   ) {
     //@ts-ignore
-    ctx.session.cart.active.product_id = id || "unknown"; // TODO: Here Imporve this cart flow with temporary data, espacially product details and order information
+    ctx.session.cart.active.product = product; // TODO: Here Imporve this cart flow with temporary data, espacially product details and order information
   }
 }
 
@@ -96,7 +82,7 @@ export function initCart(ctx: ITelegramContext) {
   const cart: ICart = {
     items: [],
     active: {
-      product_id: "",
+      product: {},
       details: [],
     },
   };
@@ -105,9 +91,9 @@ export function initCart(ctx: ITelegramContext) {
     //@ts-ignore
     !ctx.session.cart ||
     //@ts-ignore
-    ctx.session.cart !== null ||
+    ctx.session.cart == null ||
     //@ts-ignore
-    ctx.session.cart !== undefined
+    ctx.session.cart == undefined
   ) {
     //@ts-ignore
     ctx.session.cart = cart;

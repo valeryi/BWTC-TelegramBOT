@@ -50,7 +50,7 @@ settings.hears(
 );
 
 settings.hears(
-  /(⬅ back Home)|(⬅ На главную)|(⬅ На головну)/i,
+  /(back Home)|(На главную)|(На головну)/i,
   getUserInfo,
   (ctx: ITelegramContext) => {
     logger.debug("Hears back home action");

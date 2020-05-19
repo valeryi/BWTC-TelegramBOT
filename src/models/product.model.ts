@@ -4,11 +4,17 @@ export interface IProduct {
     _id: string,
     name: string,
     weight: number,
-    price: number,
+    prices: object,
     currency: string
     group: string,
     country: string,
-    category: string
+    category: string,
+    details: {
+        farm: string,
+        variety: string,
+        processing: string,
+        taste: string
+    }
 }
 
 const productSchema: Schema = new mongoose.Schema({
@@ -23,10 +29,9 @@ const productSchema: Schema = new mongoose.Schema({
         required: true,
         trim: true
     },
-    price: {
-        type: String,
+    prices: {
+        type: Object,
         required: true,
-        trim: true
     },
     currency: {
         type: String,
@@ -44,6 +49,9 @@ const productSchema: Schema = new mongoose.Schema({
     category: {
         type: String,
         trim: true
+    },
+    details: {
+        type: Object
     }
 
 }, {
