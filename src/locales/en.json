@@ -46,7 +46,7 @@
         }
     },
     "keyboards": {
-        "home": "🏠 back Home",
+        "home": "🏠 Home",
         "back": "⬅ back",
         "addToCart": "🛒 Add",
         "cancel": "Cancel",

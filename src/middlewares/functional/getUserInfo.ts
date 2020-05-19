@@ -1,6 +1,7 @@
 import { ITelegramContext } from "../../controllers/start";
 import { UserModel, IUser } from "../../models/user.model";
 import { logger } from "../../utils/winston";
+import { CartModel } from "../../models/cart.model";
 
 export const getUserInfo = async (ctx: ITelegramContext, next: Function) => {
   const session: any = ctx.session;
@@ -45,6 +46,7 @@ export const getUserInfo = async (ctx: ITelegramContext, next: Function) => {
 
     try {
       user = ((await new UserModel(newUser).save()) as unknown) as IUser;
+      await new CartModel({user_id: user.id}).save();
       logger.debug("New user created");
     } catch (err) {
       logger.error(`preStart: Couldn't save new user to DB - ` + err.message);

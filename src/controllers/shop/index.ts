@@ -79,7 +79,7 @@ ${product.details["taste"] ? `<b>Taste</b>: ${product.details["taste"]}` : ""}
   } else if (/(back)|(назад)|(назад)/i.test(ctx.message?.text as string)) {
     await ctx.scene.enter("shop");
   } else if (
-    /(back Home)|(На главную)|(На головну)/i.test(ctx.message?.text as string) // TODO: write match function for i81n
+    /(Home)|(На главную)|(На головну)/i.test(ctx.message?.text as string) // TODO: write match function for i81n
   ) {
     await ctx.scene.enter("home");
   } else if (/₴/i.test(ctx.message?.text as string)) {

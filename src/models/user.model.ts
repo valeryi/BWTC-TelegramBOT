@@ -1,6 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 
 export interface IUser {
+    id: string,
     telegram_id: number,
     first_name: string,
     last_name: string,
