@@ -7,10 +7,6 @@ export const getProducts = async (ctx: ITelegramContext, next: Function) => {
   const products: IProduct[] = [];
 
   if (session.products) {
-    logger.debug(
-      "Products found in session... skipping the rest of the code in getProducts"
-    );
-
     return next();
   }
 

@@ -1,46 +1,7 @@
+import { ICart, ICartItem, CartModel } from "../../models/cart.model";
 import { IProduct } from "../../models/product.model";
 import { ITelegramContext } from "../start";
 import { logger } from "../../utils/winston";
-// import { ICart, ICartItem } from "../../models/cart.model";
-import { ICart, ICartItem, CartModel } from "../../models/cart.model";
-
-export function addActive(
-  ctx: ITelegramContext,
-  question?: string,
-  answer?: string
-) {
-  if (!question || !answer) {
-    logger.error(`Cart: No data provided to put to cart`);
-    return;
-  }
-
-  if (
-    //@ts-ignore
-    !ctx.session.cart ||
-    //@ts-ignore
-    ctx.session.cart === null ||
-    //@ts-ignore
-    ctx.session.cart === undefined
-  )
-    initCart(ctx);
-
-  //@ts-ignore
-  ctx.session.cart.active.details.push({ question, answer });
-
-  logger.debug(
-    `Cart: adding details to active products : ${question} - ${answer}`
-  );
-}
-
-export async function informManager(
-  ctx: ITelegramContext,
-  manager_id: number,
-  order: any
-) {
-  // Set proper style
-  await ctx.telegram.sendMessage(manager_id, "test");
-  logger.debug("informed manager about order: " + JSON.stringify(order));
-}
 
 export function clearActive(ctx: ITelegramContext) {
   if (
@@ -59,6 +20,22 @@ export function clearActive(ctx: ITelegramContext) {
     details: [],
   };
   logger.debug(`Cart: active section in cart cleared out`);
+}
+
+export function clearCartItem(ctx: ITelegramContext) {
+  if (
+    //@ts-ignore
+    !ctx.session.cart.cart_item ||
+    //@ts-ignore
+    ctx.session.cart.cart_item === null ||
+    //@ts-ignore
+    ctx.session.cart.cart_item === undefined
+  )
+    logger.debug("Cart: cart doesn't exist");
+
+  //@ts-ignore
+  ctx.session.cart.cart_item = null;
+  logger.debug(`Cart: cart item cleared out`);
 }
 
 export async function provideCartProduct(
@@ -126,6 +103,7 @@ export function initCart(ctx: ITelegramContext) {
       product: {},
       details: [],
     },
+    orders: []
   };
 
   if (
@@ -150,18 +128,72 @@ export async function addCartItem(
   //@ts-ignore
   const local_items = ctx.session.cart.items;
   try {
-    const result = await CartModel.findOneAndUpdate(
-      { user_id },
-      { $push: { items: item } },
-      { new: true }
-    );
+    const newItem = new CartModel(item);
+    await newItem.save();
+    const result = await CartModel.find({ user_id });
 
     //@ts-ignore
-    ctx.session.cart.items = [...result.items];
+    ctx.session.cart.items = [...result];
     //@ts-ignore
     ctx.session.cart.cart_item = null;
     logger.debug("Cart: new cart item added");
   } catch (err) {
     logger.error("Cart: Something went wrong with adding new cart item");
+  }
+}
+
+export function currencyFormat(number: number, symbol?: true) {
+  const UAH = "₴";
+
+  if (symbol) {
+    const result = number.toLocaleString("ru-RU");
+    return result + " " + UAH;
+  }
+
+  const result = number.toLocaleString("uk-UK", {
+    style: "currency",
+    currency: "UAH",
+  });
+
+  return result; //TODO: try to implement formating myself
+}
+
+export async function deleteCartItem(ctx: ITelegramContext, id: string) {
+  //@ts-ignore
+  const cart_items = ctx.session.cart.items;
+
+  try {
+    await CartModel.findByIdAndDelete(id);
+    logger.debug("Cart: item has been deleted");
+    const newItems = cart_items.filter((item: ICartItem) => item.id !== id);
+    //@ts-ignore
+    ctx.session.cart.items = newItems;
+  } catch (err) {
+    logger.error("Cart: something went wrong deleting cart item");
+  }
+}
+
+export async function updateCartItem(
+  ctx: ITelegramContext,
+  id: string,
+  update: object
+) {
+  try {
+    const updated = await CartModel.findByIdAndUpdate(id, update, {
+      new: true,
+    });
+
+    //@ts-ignore
+    const items = ctx.session.cart.items.filter(
+      (item: ICartItem) => item.id !== id
+    );
+    updated ? items.push(updated) : items;
+    //@ts-ignore
+    ctx.session.cart.items = items;
+    logger.debug("Cart: item updated");
+  } catch (err) {
+    logger.error(
+      `Cart: something went wrong updating cart item - ${err.message}`
+    );
   }
 }

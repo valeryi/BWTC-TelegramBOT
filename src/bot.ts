@@ -37,6 +37,12 @@ database.init().then(() => {
     async (ctx: ITelegramContext) => ctx.scene.enter("contacts")
   );
 
+   bot.hears(
+     /(Cart)|(Корзина)|(Кошик)/i,
+     //@ts-ignore
+     async (ctx: ITelegramContext) => ctx.scene.enter("cart")
+   );
+
   bot.hears(
     /(Shop)|(Магазин)|(Магазин)/i,
     //@ts-ignore
@@ -59,8 +65,6 @@ database.init().then(() => {
     ctx.reply("Ось головне меню 👇", MainNavigation(ctx).draw());
   });
 
-  bot.launch().then(() => sysLog.info("Telegram BOT launched"));
-
   process.on("uncaughtException", (err) => {
     sysLog.error(`uncaughtException: ${err.message}`);
     bot.telegram.sendMessage(
@@ -78,8 +82,6 @@ database.init().then(() => {
     process.exit(1);
   });
 
-  //@ts-ignore
-  bot.email(/@/i, (ctx: ITelegramContext) => {
-    ctx.reply("email");
-  });
+  bot.launch().then(() => sysLog.info("Telegram BOT launched"));
+
 });

@@ -27,7 +27,7 @@ export function product_details_keyboard({ i18n, session }: ITelegramContext) {
       ]);
     }
   }
-  keyboard.push([{ text: i18n.t("keyboards.back") }]);
+  keyboard.push([{ text: i18n.t("navigation.back") }]);
 
   return (keyboard as unknown) as ReplyKeyboardMarkup["keyboard"];
 }
@@ -58,7 +58,7 @@ export function shop_keyboard(ctx: ITelegramContext) {
     logger.error(`Error shop_keyboard: ${err.message}`);
   }
 
-  keyboard.add(ctx.i18n.t("keyboards.home"));
+  keyboard.add(ctx.i18n.t("navigation.home"));
 
   return keyboard;
 }

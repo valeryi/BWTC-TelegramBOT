@@ -35,7 +35,7 @@ const customLevels = {
 };
 
 export const logger = createLogger({
-    level: 'debug',
+    level: 'error',
     levels: customLevels.levels,
     format: combine(
         label({ label: 'logger' }),

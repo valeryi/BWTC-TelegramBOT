@@ -9,7 +9,7 @@ const home = new Scene("home");
 
 home.enter(async (ctx: ITelegramContext) => {
   
-    ctx.reply(ctx.i18n.t('scenes.start.backToHome'), home_keyboard(ctx).draw())
+    ctx.reply(ctx.i18n.t('toAction.whatsNext'), home_keyboard(ctx).draw())
 });
 
 export default home;

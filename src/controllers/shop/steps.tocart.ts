@@ -2,36 +2,36 @@ import Scene from "telegraf/scenes/base";
 import { ITelegramContext } from "../start";
 import { getUserInfo } from "../../middlewares/functional/getUserInfo";
 import Keyboard from "telegraf-keyboard";
-import {
-  addActive,
-  clearActive,
-  createCartItem,
-  addCartItem,
-} from "./_helpers";
+import { addActive } from "./helpers";
 import { logger } from "../../utils/winston";
 import { fetchCartItems } from "../../middlewares/functional/fetchCartItems";
+import {
+  createCartItem,
+  clearActive,
+  addCartItem,
+  currencyFormat,
+} from "../cart/helpers";
 
-//QUESTION 2
 const grindQuestion = new Scene("grindQuestion");
 
 grindQuestion.enter(getUserInfo, async (ctx: ITelegramContext) => {
-  // SECOND QUESTION
   const grindOptions = new Keyboard().add(
-    ctx.i18n.t("scenes.shop.question_grind_answer1"),
-    ctx.i18n.t("scenes.shop.question_grind_answer2")
+    ctx.i18n.t("scenes.shop.questions.grind.answers.yes"),
+    ctx.i18n.t("scenes.shop.questions.grind.answers.no")
   );
 
   await ctx.reply(
-    ctx.i18n.t("scenes.shop.question_grind"),
+    ctx.i18n.t("scenes.shop.questions.grind.question"),
     grindOptions.draw()
   );
-  await ctx.reply(ctx.i18n.t("scenes.shop.choose"));
+  await ctx.reply(ctx.i18n.t("toAction.choose"));
 
   grindQuestion.on("text", getUserInfo, async (ctx: ITelegramContext) => {
     addActive(ctx, "grind", ctx.message?.text as string);
 
     if (
-      ctx.message?.text === ctx.i18n.t("scenes.shop.question_grind_answer1")
+      ctx.message?.text ===
+      ctx.i18n.t("scenes.shop.questions.grind.answers.yes")
     ) {
       return ctx.scene.enter("methodQuestion");
     } else {
@@ -45,7 +45,7 @@ const methodQuestion = new Scene("methodQuestion");
 
 methodQuestion.enter(getUserInfo, async (ctx: ITelegramContext) => {
   await ctx.reply(
-    ctx.i18n.t("scenes.shop.question_for"),
+    ctx.i18n.t("scenes.shop.questions.method.question"),
     new Keyboard().clear()
   );
 
@@ -60,13 +60,22 @@ methodQuestion.enter(getUserInfo, async (ctx: ITelegramContext) => {
 const amountQuestion = new Scene("amountQuestion");
 
 amountQuestion.enter(getUserInfo, async (ctx: ITelegramContext) => {
-  ctx.reply(ctx.i18n.t("scenes.shop.addAmount"), new Keyboard().clear());
+  ctx.reply(
+    ctx.i18n.t("scenes.shop.questions.amount.question"),
+    new Keyboard().clear()
+  );
 
   amountQuestion.on("text", getUserInfo, async (ctx: ITelegramContext) => {
     if (!/^([0-9]+$)/i.test(ctx.message?.text as string)) {
-      await ctx.reply(ctx.i18n.t("scenes.shop.validation.notNumber1"));
-      await ctx.reply(ctx.i18n.t("scenes.shop.validation.notNumber2"));
-      await ctx.reply(ctx.i18n.t("scenes.shop.validation.notNumber3"));
+      await ctx.reply(
+        ctx.i18n.t("scenes.shop.questions.amount.validation.notNumber1")
+      );
+      await ctx.reply(
+        ctx.i18n.t("scenes.shop.questions.amount.validation.notNumber2")
+      );
+      await ctx.reply(
+        ctx.i18n.t("scenes.shop.questions.amount.validation.notNumber3")
+      );
     } else {
       addActive(ctx, "amount", ctx.message?.text as string);
 
@@ -83,23 +92,22 @@ finaltocart.enter(getUserInfo, async (ctx: ITelegramContext) => {
   const cart_item = createCartItem(ctx);
 
   const keyboard = new Keyboard()
-    .add(ctx.i18n.t("keyboards.addToCart"), ctx.i18n.t("keyboards.buy"))
-    .add(ctx.i18n.t("keyboards.cancel"));
+    .add(ctx.i18n.t("navigation.addToCart"), ctx.i18n.t("navigation.pay"))
+    .add(ctx.i18n.t("navigation.cancel"));
 
   await ctx.replyWithHTML(
-    `${ctx.i18n.t("scenes.shop.toCartConfirmation.message1")} - <b>${
-      cart_item.product_name
-    }</b>`
+    `${ctx.i18n.t("scenes.shop.youPicked")} - <b>${cart_item.product_name}</b>`
   );
   await ctx.replyWithHTML(
-    `${ctx.i18n.t("scenes.shop.toCartConfirmation.message2")} - <b>${
-      cart_item.unit_total
-    }</b>₴ ${ctx.i18n.t("scenes.shop.toCartConfirmation.for")} ${
-      cart_item.amount
-    } ${ctx.i18n.t("scenes.shop.toCartConfirmation.items")}`
+    `${ctx.i18n.t("scenes.shop.itCosts")} - <b>${currencyFormat(
+      cart_item.unit_total,
+      true
+    )}</b> ${ctx.i18n.t("scenes.shop.for")} ${cart_item.amount} ${ctx.i18n.t(
+      "scenes.shop.items"
+    )}`
   );
   await ctx.reply(
-    `${ctx.i18n.t("scenes.shop.toCartConfirmation.message3")}`,
+    `${ctx.i18n.t("scenes.shop.questions.addOrPay")}`,
     keyboard.draw()
   );
 });
@@ -112,7 +120,7 @@ finaltocart.leave((ctx: ITelegramContext) => {
 export default [grindQuestion, methodQuestion, amountQuestion, finaltocart];
 
 finaltocart.hears(
-  /(Cancel)|(Відмінити)|(Отметить)/i,
+  /(Cancel)|(Скасувати)|(Отметить)/i,
   getUserInfo,
   async (ctx: ITelegramContext) => {
     //@ts-ignore
@@ -120,26 +128,40 @@ finaltocart.hears(
 
     setTimeout(() => {
       ctx.replyWithHTML(
-        `Мы заметили что Вы отменили покупку - <b>${cart_item.product_name}</b>` // TODO: Implement feedback function with order was cancelled, user should be asked if he needs any help
+        ctx.i18n.t("feedback.onCartCancel.noticed") // TODO: Implement feedback function with order was cancelled, user should be asked if he needs any help
       );
       ctx.reply(
-        `Если Вам нужна помощь нашего консультанта, нажмите на кнопку под сообщением`,
-        new Keyboard({ inline: true }).add("Нужна консультация").draw()
+        ctx.i18n.t("feedback.onCartCancel.noticed"),
+        new Keyboard({ inline: true })
+          .add(ctx.i18n.t("feedback.onCartCancel.actionButton"))
+          .draw()
       );
     }, 1000 * 60 * 5);
 
-    await ctx.reply(`${ctx.i18n.t("keyboards.cancelled")} 😓`);
+    //@ts-ignore
+    ctx.session.cart.cart_item = null; //TODO: Implement order tracking with two states - cancelled and in cart but not bought.
+
+    await ctx.reply(`${ctx.i18n.t("alerts.cancelled")} 😓`);
     await ctx.scene.enter("shop");
     //@ts-ignore
   }
 );
 
-finaltocart.hears(/(Buy)|(Оплатити)|(Оплатить)/i, (ctx: ITelegramContext) => {
-  ctx.reply("buy action");
-});
+finaltocart.hears(
+  /(Pay)|(Оплатити)|(Оплатить)/i,
+  async (ctx: ITelegramContext) => {
+    //@ts-ignore
+    const user_id = ctx.session.user.id;
+    //@ts-ignore
+    const item = ctx.session.cart.cart_item;
+
+    await addCartItem(ctx, user_id, item);
+    ctx.scene.enter("payment");
+  }
+);
 
 finaltocart.hears(
-  /(Add)|(Добавить)|(Додати)/i,
+  /(To cart)|(Добавить)|(Додати)/i,
   getUserInfo,
   fetchCartItems,
   async (ctx: ITelegramContext) => {
@@ -151,12 +173,7 @@ finaltocart.hears(
     await addCartItem(ctx, user_id, item);
 
     //@ts-ignore
-    await ctx.reply(ctx.i18n.t("scenes.shop.addedToCartMessage"));
+    await ctx.reply(ctx.i18n.t("alerts.putToCart"));
     ctx.scene.enter("shop");
   }
 );
-
-//  finaltocart.hears(//i.test(), getUserInfo, (ctx: ITelegramContext) => {
-//    //@ts-ignore
-//    return ctx.scene.enter("shop");
-//  });

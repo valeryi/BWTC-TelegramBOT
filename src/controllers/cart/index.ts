@@ -1,59 +1,109 @@
-import Stage from 'telegraf/stage';
-import Scene from 'telegraf/scenes/base';
-import { TelegrafContext } from 'telegraf/typings/context';
-// import { cartStepOne } from '../../utils/keyboards';
-// import { stepTwo } from './actions';
-// import { stepOne } from './actions';
+import Scene from "telegraf/scenes/base";
+import { getUserInfo } from "../../middlewares/functional/getUserInfo";
+import { fetchCartItems } from "../../middlewares/functional/fetchCartItems";
+import { updateUserActivity } from "../../middlewares/functional/updateUserActivity";
+import { ITelegramContext } from "../start";
+import Keyboard from "telegraf-keyboard";
+import { ICartItem } from "../../models/cart.model";
+import { currencyFormat } from "./helpers";
+import { logger } from "../../utils/winston";
+import { getProducts } from "../../middlewares/functional/getProducts";
+import { edit, deleteItem, amount, pack } from "./action";
 
-const { leave } = Stage;
-export const cart = new Scene('cart');
+export const cart = new Scene("cart");
 
-cart.enter(async (ctx: TelegrafContext) => {
-
-    const match = ctx.match?.input;
-    const id = (match as string).split(' ')[1];
-
+cart.enter(
+  getUserInfo,
+  getProducts,
+  fetchCartItems,
+  updateUserActivity,
+  async (ctx: ITelegramContext) => {
     //@ts-ignore
-    const client = ctx.session.current_user;
-    //@ts-ignore
-    const callback_query_id = ctx.update.callback_query?.id;
+    const cart_items = ctx.session.cart.items;
+    const total_price = cart_items.reduce(
+      (acc: number, item: ICartItem) => acc + item.unit_total, //BUG: null pops up here
+      0
+    );
 
-    //@ts-ignore
-    const product = ctx.session.products.filter(product => product._id == id)[0];
+    if (cart_items.length <= 0) {
+      const empty_keyboard = new Keyboard()
+        .add(ctx.i18n.t("keyboards.main.shop"))
+        .add(ctx.i18n.t("navigation.back"));
 
-    //@ts-ignore
-    ctx.session.cart = {
-        query_id: callback_query_id,
-        client: client,
-        active: {product},
-        items: [],
-        payment_method: '',
-        paid: false,
+      await ctx.reply(
+        ctx.i18n.t("scenes.cart.empty.isEmpty"),
+        empty_keyboard.draw()
+      );
+      await ctx.reply(ctx.i18n.t("toAction.pickCoffee"));
+    } else {
+      const cart_list_keyboard = new Keyboard({ inline: true });
+
+      for (let i = 0; i < cart_items.length; i++) {
+        const item = cart_items[i];
+
+        cart_list_keyboard.add(
+          `${item.product_name} - ${item.amount} ${ctx.i18n.t(
+            "scenes.shop.items"
+          )} - ${currencyFormat(item.unit_total, true)}:edit ${item.id}`
+        );
+      }
+
+      const cart_keyboard = new Keyboard()
+        .add(ctx.i18n.t("navigation.pay"))
+        .add(ctx.i18n.t("navigation.back"));
+
+      await ctx.reply(
+        ctx.i18n.t("scenes.cart.notEmpty.have"),
+        cart_list_keyboard.draw()
+      );
+
+      await ctx.reply(
+        `${ctx.i18n.t("scenes.cart.notEmpty.totalInCart")} ${currencyFormat(
+          total_price,
+          true
+        )}`,
+        cart_keyboard.draw()
+      );
+
+      await ctx.reply(ctx.i18n.t("toAction.needEdit"));
     }
+  }
+);
 
-    //@ts-ignore
-    console.log(ctx.session.cart);
+cart.leave(async (_: ITelegramContext) => {
+  logger.debug("Cart: leacing cart scene");
+});
 
-    //@ts-ignore
-    ctx.scene.enter('cartStepOne');
+cart.hears(
+  /(Pay)|(Оплатить)|(Оплатити)/i,
+  getUserInfo,
+  async (ctx: ITelegramContext) => {
+    await ctx.scene.enter("payment");
+  }
+);
 
-})
+cart.hears(
+  /(back)|(назад)|(назад)/i,
+  getUserInfo,
+  async (ctx: ITelegramContext) => {
+    await ctx.scene.enter("home");
+  }
+);
 
-cart.leave(async (_: TelegrafContext) => {})
-
-cart.command('saveme', leave());
-
-// shop.hears('Colombia', ColombiaCategory);
-// shop.hears('Brazil', BrazilCategory);
-// shop.hears('Blend', BlendCategory);
-// shop.hears('⬅ На головну', (ctx: TelegrafContext) => {
-
-//     //@ts-ignore
-//     ctx.scene.leave();
-//     ctx.reply('Ось головне меню 👇', (MainNavigation() as any).draw());
-// });
-
-// shop.action(/productDetails/i, getProductDetails);
-// shop.action(/toCart/i, toCart);
+cart.hears(
+  /(Cancel)|(Скасувати)|(Отметить)/i,
+  getUserInfo,
+  async (ctx: ITelegramContext) => {
+    await ctx.scene.enter("cart");
+  }
+);
 
 export default cart;
+
+cart.action(/(edit)/i, getUserInfo, edit);
+
+cart.action(/(delete)/i, getUserInfo, deleteItem);
+
+cart.action(/(pack)/i, getUserInfo, pack);
+
+cart.action(/(amount)/i, getUserInfo, amount);

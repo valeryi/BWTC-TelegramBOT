@@ -16,10 +16,10 @@ settings.enter(async (ctx: ITelegramContext) => {
   const i18n = ctx.i18n;
 
   const settingKeyboard = new Keyboard({ inline: false })
-    .add(i18n.t("scenes.settings.language.changeLanguage"))
-    .add(i18n.t("keyboards.home"));
+    .add(i18n.t("scenes.settings.language"))
+    .add(i18n.t("navigation.home"));
 
-  ctx.reply(i18n.t("scenes.settings.adjustMe"), settingKeyboard.draw());
+  ctx.reply(i18n.t("toAction.customizeMe"), settingKeyboard.draw());
 });
 
 settings.leave(async (_: ITelegramContext) => {
@@ -40,23 +40,23 @@ settings.hears(
     })
       .add(`English:changeLanguage eng`)
       .add(`Русский:changeLanguage ru`)
-      .add(`Українська:changeLanguage uk`);
+      .add(`Українська:changeLanguage ukr`);
 
     ctx.reply(
-      i18n.t("scenes.settings.language.pickLanguage"),
+      i18n.t("toAction.pickLanguage"),
       languageList.draw()
     );
   }
 );
 
 settings.hears(
-  /(back Home)|(На главную)|(На головну)/i,
+  /(Home)|(Главная)|(Головна)/i,
   getUserInfo,
   (ctx: ITelegramContext) => {
     logger.debug("Hears back home action");
     const i18n = ctx.i18n;
 
-    ctx.reply(i18n.t(`scenes.start.backToHome`), MainNavigation(ctx).draw());
+    ctx.reply(i18n.t(`navigation.home`), MainNavigation(ctx).draw());
   }
 );
 settings.action(/changeLanguage/i, getUserInfo, changeLanguageAction);

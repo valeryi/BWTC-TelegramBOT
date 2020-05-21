@@ -1,16 +1,18 @@
 import { ITelegramContext } from "../../controllers/start";
 import { UserModel, IUser } from "../../models/user.model";
 import { logger } from "../../utils/winston";
-import { CartModel } from "../../models/cart.model";
+import { initCart } from "../../controllers/cart/helpers";
 
 export const getUserInfo = async (ctx: ITelegramContext, next: Function) => {
   const session: any = ctx.session;
   const i18n = ctx.i18n;
 
+  //@ts-ignore
+  if (ctx.session.cart === undefined) {
+    initCart(ctx);
+  }
+  
   if (session.user) {
-    logger.debug(
-      "Active session exists... skipping the rest of the code in getUserInfo"
-    );
 
     i18n.locale(session.user.language_code);
     logger.debug("Locale set");
@@ -46,7 +48,6 @@ export const getUserInfo = async (ctx: ITelegramContext, next: Function) => {
 
     try {
       user = ((await new UserModel(newUser).save()) as unknown) as IUser;
-      await new CartModel({user_id: user.id}).save();
       logger.debug("New user created");
     } catch (err) {
       logger.error(`preStart: Couldn't save new user to DB - ` + err.message);

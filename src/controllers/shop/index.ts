@@ -3,27 +3,17 @@ import { ITelegramContext } from "../start";
 import { TelegrafContext } from "telegraf/typings/context";
 import { getUserInfo } from "../../middlewares/functional/getUserInfo";
 import { logger } from "../../utils/winston";
-import {
-  initCart,
-  provideCartProduct,
-  addActive,
-} from "./_helpers";
-import {
-  product_details_keyboard,
-  shop_keyboard,
-} from "./keyboards";
+import { addActive } from "./helpers";
+import { product_details_keyboard, shop_keyboard } from "./keyboards";
 import { IProduct } from "../../models/product.model";
+import { provideCartProduct, clearActive } from "../cart/helpers";
 
 const shop = new Scene("shop");
 
 shop.enter(getUserInfo, async (ctx: ITelegramContext) => {
   logger.debug("entering shop scene");
-  initCart(ctx);
 
-  await ctx.reply(
-    ctx.i18n.t("scenes.shop.pickMore"),
-    shop_keyboard(ctx).draw()
-  );
+  await ctx.reply(ctx.i18n.t("scenes.shop.popup"), shop_keyboard(ctx).draw());
 });
 
 shop.leave(async (_: TelegrafContext) => logger.debug("leaving shop scene"));
@@ -77,9 +67,10 @@ ${product.details["taste"] ? `<b>Taste</b>: ${product.details["taste"]}` : ""}
       }
     );
   } else if (/(back)|(назад)|(назад)/i.test(ctx.message?.text as string)) {
+    clearActive(ctx);
     await ctx.scene.enter("shop");
   } else if (
-    /(Home)|(На главную)|(На головну)/i.test(ctx.message?.text as string) // TODO: write match function for i81n
+    /(Home)|(Главная)|(Головна)/i.test(ctx.message?.text as string) // TODO: write match function for i81n
   ) {
     await ctx.scene.enter("home");
   } else if (/₴/i.test(ctx.message?.text as string)) {
@@ -88,7 +79,7 @@ ${product.details["taste"] ? `<b>Taste</b>: ${product.details["taste"]}` : ""}
     addActive(ctx, "pack", pack);
     ctx.scene.enter("amountQuestion");
   } else {
-    ctx.reply(ctx.i18n.t("scenes.common.commandNotDetected"));
+    ctx.reply(ctx.i18n.t("system.commandNotFound"));
   }
 });
 
