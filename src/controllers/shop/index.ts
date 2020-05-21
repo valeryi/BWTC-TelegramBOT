@@ -56,7 +56,7 @@ ${product.details["taste"] ? `<b>Taste</b>: ${product.details["taste"]}` : ""}
 `;
 
     ctx.replyWithPhoto(
-      `https://images.pexels.com/photos/2265366/pexels-photo-2265366.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500`,
+      product.photo,
       {
         caption: product_details,
         parse_mode: "HTML",

@@ -9,6 +9,7 @@ export interface IProduct {
     group: string,
     country: string,
     category: string,
+    photo: string,
     details: {
         farm: string,
         variety: string,
@@ -52,6 +53,9 @@ const productSchema: Schema = new mongoose.Schema({
     },
     details: {
         type: Object
+    },
+    photo: {
+        type: String
     }
 
 }, {
