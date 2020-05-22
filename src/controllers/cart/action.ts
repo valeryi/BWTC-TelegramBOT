@@ -21,6 +21,7 @@ export async function edit(ctx: ITelegramContext) {
 
   ctx.reply(cart_item.product_name, edit_keyboard.draw());
   ctx.reply(ctx.i18n.t("scenes.cart.edit.question"), confirm_keyboard.draw());
+  ctx.answerCbQuery();
 }
 
 export async function deleteItem(ctx: ITelegramContext) {
@@ -68,6 +69,7 @@ export async function amount(ctx: ITelegramContext) {
   if (!cart_item) {
     ctx.reply(ctx.i18n.t("alerts.itemNotFound"));
   } else {
+    await ctx.reply(ctx.i18n.t("toAction.enterAmount"));
     //@ts-ignore
     ctx.session.cart.correction = item_id;
     ctx.scene.enter("editAmount");

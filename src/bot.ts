@@ -4,14 +4,14 @@ import { Telegraf } from "telegraf";
 import express from "express";
 import { database } from "./db/mongoose";
 import { applyMiddlewares } from "./middlewares";
-// import { sysLog } from "./utils/winston";
+import { sysLog } from "./utils/winston";
 
 import { updateUserActivity } from "./middlewares/functional/updateUserActivity"; // TODO: Structure well - this is a common function
 import { ITelegramContext } from "./controllers/start";
 import { getUserInfo } from "./middlewares/functional/getUserInfo";
 import { getProducts } from "./middlewares/functional/getProducts";
 import { errorHandler } from "./error handlers";
-import { sysLog } from "./utils/winston";
+// import { sysLog } from "./utils/winston";
 
 const server = express();
 
