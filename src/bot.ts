@@ -82,11 +82,11 @@ database.init().then(() => {
   bot.command("home", async (ctx: ITelegramContext) => ctx.scene.enter("home"));
 
   // bot.telegram.setWebhook("");
-  bot.launch();
-  // bot.telegram.setWebhook("https://fathomless-wave-38776.herokuapp.com/");
-  // bot.startWebhook(
-  //   "/1123799335:AAH4JyWrKUFlEkTIIClFF_GfQebGnfvwQYo",
-  //   null,
-  //   5000
-  // );
+  // bot.launch();
+  bot.telegram.setWebhook("https://fathomless-wave-38776.herokuapp.com/");
+  bot.startWebhook(
+    "/1123799335:AAH4JyWrKUFlEkTIIClFF_GfQebGnfvwQYo",
+    null,
+    5000
+  );
 });
