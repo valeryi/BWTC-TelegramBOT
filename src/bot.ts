@@ -10,11 +10,13 @@ import { updateUserActivity } from "./middlewares/functional/updateUserActivity"
 import { ITelegramContext } from "./controllers/start";
 import { getUserInfo } from "./middlewares/functional/getUserInfo";
 import { getProducts } from "./middlewares/functional/getProducts";
+import { errorHandler } from "./error handlers";
 
 database.init().then(() => {
   const bot = new Telegraf(process.env.TELEGRAM_TOKEN as string);
 
   applyMiddlewares(bot);
+  errorHandler(bot);
 
   //@ts-ignore
   bot.start(getUserInfo, updateUserActivity, async (ctx: ITelegramContext) => {
@@ -37,11 +39,11 @@ database.init().then(() => {
     async (ctx: ITelegramContext) => ctx.scene.enter("contacts")
   );
 
-   bot.hears(
-     /(Cart)|(Корзина)|(Кошик)/i,
-     //@ts-ignore
-     async (ctx: ITelegramContext) => ctx.scene.enter("cart")
-   );
+  bot.hears(
+    /(Cart)|(Корзина)|(Кошик)/i,
+    //@ts-ignore
+    async (ctx: ITelegramContext) => ctx.scene.enter("cart")
+  );
 
   bot.hears(
     /(Shop)|(Магазин)|(Магазин)/i,
@@ -65,23 +67,5 @@ database.init().then(() => {
     ctx.reply("Ось головне меню 👇", MainNavigation(ctx).draw());
   });
 
-  process.on("uncaughtException", (err) => {
-    sysLog.error(`uncaughtException: ${err.message}`);
-    bot.telegram.sendMessage(
-      476963932,
-      `uncaughtException: "${err}" at /${Date.now()}/`
-    );
-  });
-
-  process.on("exit", () => {
-    sysLog.debug(`exiting process at /${Date.now()}/`);
-    bot.telegram.sendMessage(
-      476963932,
-      `Exiting process of TelegramBOT - BWTC at ${Date.now()}`
-    );
-    process.exit(1);
-  });
-
   bot.launch().then(() => sysLog.info("Telegram BOT launched"));
-
 });
