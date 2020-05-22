@@ -88,12 +88,11 @@ payment.action("PrivatBank", getUserInfo, async (ctx: ITelegramContext) => {
 });
 
 payment.action("NovaPoshta", getUserInfo, (ctx: ITelegramContext) => {
-  console.log("NovaPoshta");
-  ctx.answerCbQuery();
+  ctx.answerCbQuery(`This method currently doesn't work.`, true);
 });
 
 payment.action("Pickup", getUserInfo, (ctx: ITelegramContext) => {
-  ctx.answerCbQuery(`This method currently doesn't work.`,true);
+  ctx.answerCbQuery(`This method currently doesn't work.`, true);
 });
 
 payment.action("Delivery", getUserInfo, (ctx: ITelegramContext) => {

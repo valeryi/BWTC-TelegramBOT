@@ -12,6 +12,7 @@ import toCartQ from "../controllers/shop/steps.tocart";
 import paymentScene from "../controllers/payment";
 import editAmountScene from "../controllers/cart/edit.amount";
 import editPackScene from "../controllers/cart/edit.pack";
+import feedbackScene from "../utils/feedback";
 
 export const stage = new Stage([
   startScene,
@@ -24,6 +25,7 @@ export const stage = new Stage([
   paymentScene,
   editAmountScene,
   editPackScene,
+  feedbackScene,
 ]);
 
 const stagesMiddleware = (bot: Telegraf<TelegrafContext>) => {

@@ -9,6 +9,7 @@ import { createCartItem } from "../../utils/helpers/cart";
 import { clearActive } from "../../utils/helpers/cart";
 import { addCartItem } from "../../utils/helpers/cart";
 import { currencyFormat } from "../../utils/helpers/common";
+import { onCancel } from "../../utils/feedback";
 
 const grindQuestion = new Scene("grindQuestion");
 
@@ -124,22 +125,12 @@ finaltocart.hears(
     //@ts-ignore
     const cart_item = ctx.session.cart.cart_item;
 
-    setTimeout(() => {
-      ctx.replyWithHTML(
-        ctx.i18n.t("feedback.onCartCancel.noticed") // TODO: Implement feedback function with order was cancelled, user should be asked if he needs any help
-      );
-      ctx.reply(
-        ctx.i18n.t("feedback.onCartCancel.noticed"),
-        new Keyboard({ inline: true })
-          .add(ctx.i18n.t("feedback.onCartCancel.actionButton"))
-          .draw()
-      );
-    }, 1000 * 60 * 5);
+    onCancel(ctx);
 
     //@ts-ignore
     ctx.session.cart.cart_item = null; //TODO: Implement order tracking with two states - cancelled and in cart but not bought.
 
-    await ctx.reply(`${ctx.i18n.t("alerts.cancelled")} 😓`);
+    await ctx.reply(`${ctx.i18n.t("alerts.cancelled")}`);
     await ctx.scene.enter("shop");
     //@ts-ignore
   }

@@ -5,7 +5,6 @@ import { database } from "./db/mongoose";
 import { applyMiddlewares } from "./middlewares";
 import { sysLog } from "./utils/winston";
 
-import { MainNavigation } from "./utils/keyboards";
 import { updateUserActivity } from "./middlewares/functional/updateUserActivity"; // TODO: Structure well - this is a common function
 import { ITelegramContext } from "./controllers/start";
 import { getUserInfo } from "./middlewares/functional/getUserInfo";
@@ -46,6 +45,17 @@ database.init().then(() => {
   );
 
   bot.hears(
+    /^(Shops)|(Магазины)|(Магазини)$/i,
+    //@ts-ignore
+    getUserInfo,
+    getProducts,
+    updateUserActivity,
+    (ctx: ITelegramContext) => {
+      ctx.reply("Раздел в разработке");
+    }
+  );
+
+  bot.hears(
     /(Shop)|(Магазин)|(Магазин)/i,
     //@ts-ignore
     getUserInfo,
@@ -57,15 +67,19 @@ database.init().then(() => {
     }
   );
 
+  bot.hears(
+    /(Work)|(Работаем)|(Працюємо)/i,
+    //@ts-ignore
+    getUserInfo,
+    getProducts,
+    updateUserActivity,
+    (ctx: ITelegramContext) => {
+      ctx.reply("Раздел в разработке");
+    }
+  );
+
   //@ts-ignore
   bot.command("home", async (ctx: ITelegramContext) => ctx.scene.enter("home"));
-
-  //@ts-ignore
-  bot.command("saveme", async (ctx: ITelegramContext) => {
-    console.debug(ctx, "User uses /saveme command");
-
-    ctx.reply("Ось головне меню 👇", MainNavigation(ctx).draw());
-  });
 
   bot.launch().then(() => sysLog.info("Telegram BOT launched"));
 });

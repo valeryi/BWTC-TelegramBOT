@@ -11,9 +11,18 @@ export const getUserInfo = async (ctx: ITelegramContext, next: Function) => {
   if (ctx.session.cart === undefined) {
     initCart(ctx);
   }
-  
-  if (session.user) {
 
+  //@ts-ignore
+  if (ctx.session.feedback === undefined) {
+    //@ts-ignore
+
+    ctx.session.feedback = {
+      item: {},
+      active: false
+    };
+  }
+
+  if (session.user) {
     i18n.locale(session.user.language_code);
     logger.debug("Locale set");
 
@@ -25,7 +34,11 @@ export const getUserInfo = async (ctx: ITelegramContext, next: Function) => {
     ctx.update.message?.from?.id || ctx.update.message?.chat.id;
 
   try {
-    user = ((await UserModel.find({ telegram_id }))[0] as unknown) as IUser;
+    user = ((
+      await UserModel.find({
+        telegram_id,
+      })
+    )[0] as unknown) as IUser;
   } catch (err) {
     logger.error(`getUserInfo: Some problems with DB - ${err.message}`);
     throw new Error(`getUserInfo: Some problems with DB - ${err.message}`);
