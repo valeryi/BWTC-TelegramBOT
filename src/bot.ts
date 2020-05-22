@@ -39,7 +39,14 @@ database.init().then(() => {
     //@ts-ignore
     getUserInfo,
     updateUserActivity,
-    async (ctx: ITelegramContext) => ctx.scene.enter("contacts")
+    async (ctx: ITelegramContext) => {
+      //@ts-ignore
+      bot.telegram.sendContact(
+        ctx.chat?.id,
+        +380631895794,
+        "Олейник Валентин"
+      );
+    }
   );
 
   bot.hears(

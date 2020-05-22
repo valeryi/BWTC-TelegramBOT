@@ -1,11 +1,9 @@
-import Stage from "telegraf/stage";
 import Scene from "telegraf/scenes/base";
 import { TelegrafContext } from "telegraf/typings/context";
 import { ContextMessageUpdate } from "telegraf";
 
 export type ITelegramContext = ContextMessageUpdate & TelegrafContext;
 
-const { leave } = Stage;
 const contacts = new Scene("contacts");
 
 contacts.enter(async (ctx: ITelegramContext) => {
@@ -23,7 +21,5 @@ contacts.enter(async (ctx: ITelegramContext) => {
 });
 
 contacts.leave(async (_: TelegrafContext) => {});
-
-contacts.command("saveme", leave());
 
 export default contacts;

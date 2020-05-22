@@ -1,7 +1,7 @@
 {
   "name": "telegrambot",
   "version": "1.0.0",
-  "description": "",
+  "description": "BWTC Bot",
   "main": "./dist/bot.js",
   "dependencies": {
     "@types/express": "^4.17.6",
@@ -36,8 +36,8 @@
     "build": "tsc",
     "debug": "npm-run-all clear build copy",
     "heroku": "npm-run-all clear build copy start",
-    "heroku:deploy": "git add . && git commit -m \"fix\" && git push heroku master"
+    "heroku:deploy": "git add . && git commit -m \"Heroku fixing\" && git push heroku master"
   },
-  "author": "",
+  "author": "Valeryi Oleinyk",
   "license": "ISC"
 }
