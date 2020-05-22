@@ -23,15 +23,14 @@ payment.enter(
       .add(`${ctx.i18n.t("scenes.payment.options.pickup")}:Pickup`)
       .add(`${ctx.i18n.t("scenes.payment.options.delivery")}:Delivery`);
 
-    await ctx.reply(
-      ctx.i18n.t("scenes.payment.paymentList"),
-      payment_list.draw()
-    );
-
-    await ctx.reply(
-      ctx.i18n.t("toAction.chooseOptionToPay"),
-      new Keyboard().add(ctx.i18n.t("navigation.cancel")).draw()
-    );
+    await ctx
+      .reply(ctx.i18n.t("scenes.payment.paymentList"), payment_list.draw())
+      .then(() => {
+        ctx.reply(
+          ctx.i18n.t("toAction.chooseOptionToPay"),
+          new Keyboard().add(ctx.i18n.t("navigation.cancel")).draw()
+        );
+      });
   }
 );
 
