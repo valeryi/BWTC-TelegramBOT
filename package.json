@@ -33,7 +33,7 @@
     "dev": "npm run clear&&tsc-watch --onSuccess \"npm-run-all copy start\"",
     "build": "tsc",
     "debug": "npm-run-all clear build copy",
-    "heroku": "npm-run-all clear build copy start",
+    "heroku": "npm-run-all clear build start",
     "heroku:deploy": "git add . && git commit -m \"fix\" && git push heroku master"
   },
   "author": "",
