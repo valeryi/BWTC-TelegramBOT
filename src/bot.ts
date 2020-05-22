@@ -1,6 +1,7 @@
 require("dotenv").config();
 
 import { Telegraf } from "telegraf";
+import express from "express";
 import { database } from "./db/mongoose";
 import { applyMiddlewares } from "./middlewares";
 // import { sysLog } from "./utils/winston";
@@ -10,6 +11,9 @@ import { ITelegramContext } from "./controllers/start";
 import { getUserInfo } from "./middlewares/functional/getUserInfo";
 import { getProducts } from "./middlewares/functional/getProducts";
 import { errorHandler } from "./error handlers";
+import { sysLog } from "./utils/winston";
+
+const server = express();
 
 database.init().then(() => {
   const bot = new Telegraf(process.env.TELEGRAM_TOKEN as string);
@@ -78,7 +82,7 @@ database.init().then(() => {
     }
   );
 
-  // const PORT = process.env.PORT as unknown as number || 5000;
+  const PORT = ((process.env.PORT as unknown) as number) || 3000;
 
   //@ts-ignore
   bot.command("home", async (ctx: ITelegramContext) => ctx.scene.enter("home"));
@@ -88,7 +92,18 @@ database.init().then(() => {
   bot.telegram.setWebhook(
     `https://fathomless-wave-38776.herokuapp.com/bot${process.env.TELEGRAM_TOKEN}`
   );
-  bot.startWebhook(`/${process.env.TELEGRAM_TOKEN}`, null, 5000);
+
+  server.use(bot.webhookCallback(`/bot${process.env.TELEGRAM_TOKEN}`));
+
+  server.get('/', (_, res)=> {
+    res.send('Hello, World!')
+  });
+
+  // bot.startWebhook(`/${process.env.TELEGRAM_TOKEN}`);
+
+  server.listen(PORT, () => {
+    sysLog.info("Telegram Bot Server launched...");
+  });
 
   // const webhookStatus = bot.telegram.getWebhookInfo();
 });
