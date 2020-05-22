@@ -1,7 +1,77 @@
-import { ICart, ICartItem, CartModel } from "../../models/cart.model";
+import { ITelegramContext } from "../../controllers/start";
+import { logger } from "../winston";
+import { CartModel } from "../../models/cart.model";
+import { ICartItem } from "../../models/cart.model";
 import { IProduct } from "../../models/product.model";
-import { ITelegramContext } from "../start";
-import { logger } from "../../utils/winston";
+import { ICart } from "../../models/cart.model";
+
+export function addActive(
+  ctx: ITelegramContext,
+  question?: string,
+  answer?: string
+) {
+  if (!question || !answer) {
+    logger.error(`Cart: No data provided to put to cart`);
+    return;
+  }
+
+  if (
+    //@ts-ignore
+    !ctx.session.cart ||
+    //@ts-ignore
+    ctx.session.cart === null ||
+    //@ts-ignore
+    ctx.session.cart === undefined
+  )
+    initCart(ctx);
+
+  //@ts-ignore
+  ctx.session.cart.active.details.push({ question, answer });
+
+  logger.debug(
+    `Cart: adding details to active products : ${question} - ${answer}`
+  );
+}
+
+export async function deleteCartItem(ctx: ITelegramContext, id: string) {
+  //@ts-ignore
+  const cart_items = ctx.session.cart.items;
+
+  try {
+    await CartModel.findByIdAndDelete(id);
+    logger.debug("Cart: item has been deleted");
+    const newItems = cart_items.filter((item: ICartItem) => item.id !== id);
+    //@ts-ignore
+    ctx.session.cart.items = newItems;
+  } catch (err) {
+    logger.error("Cart: something went wrong deleting cart item");
+  }
+}
+
+export async function updateCartItem(
+  ctx: ITelegramContext,
+  id: string,
+  update: object
+) {
+  try {
+    const updated = await CartModel.findByIdAndUpdate(id, update, {
+      new: true,
+    });
+
+    //@ts-ignore
+    const items = ctx.session.cart.items.filter(
+      (item: ICartItem) => item.id !== id
+    );
+    updated ? items.push(updated) : items;
+    //@ts-ignore
+    ctx.session.cart.items = items;
+    logger.debug("Cart: item updated");
+  } catch (err) {
+    logger.error(
+      `Cart: something went wrong updating cart item - ${err.message}`
+    );
+  }
+}
 
 export function clearActive(ctx: ITelegramContext) {
   if (
@@ -103,7 +173,7 @@ export function initCart(ctx: ITelegramContext) {
       product: {},
       details: [],
     },
-    orders: []
+    orders: [],
   };
 
   if (
@@ -139,61 +209,5 @@ export async function addCartItem(
     logger.debug("Cart: new cart item added");
   } catch (err) {
     logger.error("Cart: Something went wrong with adding new cart item");
-  }
-}
-
-export function currencyFormat(number: number, symbol?: true) {
-  const UAH = "₴";
-
-  if (symbol) {
-    const result = number.toLocaleString("ru-RU");
-    return result + " " + UAH;
-  }
-
-  const result = number.toLocaleString("uk-UK", {
-    style: "currency",
-    currency: "UAH",
-  });
-
-  return result; //TODO: try to implement formating myself
-}
-
-export async function deleteCartItem(ctx: ITelegramContext, id: string) {
-  //@ts-ignore
-  const cart_items = ctx.session.cart.items;
-
-  try {
-    await CartModel.findByIdAndDelete(id);
-    logger.debug("Cart: item has been deleted");
-    const newItems = cart_items.filter((item: ICartItem) => item.id !== id);
-    //@ts-ignore
-    ctx.session.cart.items = newItems;
-  } catch (err) {
-    logger.error("Cart: something went wrong deleting cart item");
-  }
-}
-
-export async function updateCartItem(
-  ctx: ITelegramContext,
-  id: string,
-  update: object
-) {
-  try {
-    const updated = await CartModel.findByIdAndUpdate(id, update, {
-      new: true,
-    });
-
-    //@ts-ignore
-    const items = ctx.session.cart.items.filter(
-      (item: ICartItem) => item.id !== id
-    );
-    updated ? items.push(updated) : items;
-    //@ts-ignore
-    ctx.session.cart.items = items;
-    logger.debug("Cart: item updated");
-  } catch (err) {
-    logger.error(
-      `Cart: something went wrong updating cart item - ${err.message}`
-    );
   }
 }

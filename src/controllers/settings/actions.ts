@@ -1,7 +1,7 @@
 import { ITelegramContext } from "../start";
-import { getActionParams } from "../../utils/helpers";
 import { UserModel, IUser } from "../../models/user.model";
 import { logger } from "../../utils/winston";
+import { getActionParams } from "../../utils/helpers/common";
 
 export const changeLanguageAction = async (ctx: ITelegramContext) => {
   const i18n = ctx.i18n;

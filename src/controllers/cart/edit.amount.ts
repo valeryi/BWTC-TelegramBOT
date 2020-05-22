@@ -4,7 +4,7 @@ import { fetchCartItems } from "../../middlewares/functional/fetchCartItems";
 import { updateUserActivity } from "../../middlewares/functional/updateUserActivity";
 import { ITelegramContext } from "../start";
 import { ICartItem } from "../../models/cart.model";
-import { updateCartItem } from "./helpers";
+import { updateCartItem } from "../../utils/helpers/cart";
 
 const editAmount = new Scene("editAmount");
 

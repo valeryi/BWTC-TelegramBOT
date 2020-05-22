@@ -8,7 +8,7 @@ import { UserModel, IUser } from "../../models/user.model";
 import { IOrder, OrderModel } from "../../models/order.model";
 import { ICartItem, CartModel } from "../../models/cart.model";
 import { logger } from "../../utils/winston";
-import { orderNotifier } from "../shop/helpers";
+import { orderNotifier } from "../../utils/helpers/common";
 
 export const payment = new Scene("payment");
 

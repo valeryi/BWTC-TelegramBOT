@@ -3,10 +3,9 @@ import { ITelegramContext } from "../start";
 import { TelegrafContext } from "telegraf/typings/context";
 import { getUserInfo } from "../../middlewares/functional/getUserInfo";
 import { logger } from "../../utils/winston";
-import { addActive } from "./helpers";
 import { product_details_keyboard, shop_keyboard } from "./keyboards";
 import { IProduct } from "../../models/product.model";
-import { provideCartProduct, clearActive } from "../cart/helpers";
+import { provideCartProduct, clearActive, addActive } from "../../utils/helpers/cart";
 
 const shop = new Scene("shop");
 

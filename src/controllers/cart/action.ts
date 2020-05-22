@@ -1,7 +1,7 @@
 import { ITelegramContext } from "../start";
 import Keyboard from "telegraf-keyboard";
 import { ICartItem } from "../../models/cart.model";
-import { deleteCartItem } from "./helpers";
+import { deleteCartItem } from "../../utils/helpers/cart";
 
 export async function edit(ctx: ITelegramContext) {
   const item_id = ctx.match?.input.split(" ")[1];

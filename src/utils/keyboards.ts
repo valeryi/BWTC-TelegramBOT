@@ -34,13 +34,7 @@ export const CoffeeListNavigation = (ctx: ITelegramContext) => {
 
 export const cartStepOneKeyboard = () => {
 
-    const options = {
-        inline: false, // default
-        duplicates: false, // default
-        newline: false, // default
-    };
-
-    const stepOne = new Keyboard(options)
+    const stepOne = new Keyboard()
         .add('Змолоти')
         .add('Не змелювати');
 

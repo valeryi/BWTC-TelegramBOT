@@ -2,15 +2,13 @@ import Scene from "telegraf/scenes/base";
 import { ITelegramContext } from "../start";
 import { getUserInfo } from "../../middlewares/functional/getUserInfo";
 import Keyboard from "telegraf-keyboard";
-import { addActive } from "./helpers";
 import { logger } from "../../utils/winston";
 import { fetchCartItems } from "../../middlewares/functional/fetchCartItems";
-import {
-  createCartItem,
-  clearActive,
-  addCartItem,
-  currencyFormat,
-} from "../cart/helpers";
+import { addActive } from "../../utils/helpers/cart";
+import { createCartItem } from "../../utils/helpers/cart";
+import { clearActive } from "../../utils/helpers/cart";
+import { addCartItem } from "../../utils/helpers/cart";
+import { currencyFormat } from "../../utils/helpers/common";
 
 const grindQuestion = new Scene("grindQuestion");
 

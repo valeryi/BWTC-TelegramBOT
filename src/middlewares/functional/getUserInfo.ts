@@ -1,7 +1,7 @@
 import { ITelegramContext } from "../../controllers/start";
 import { UserModel, IUser } from "../../models/user.model";
 import { logger } from "../../utils/winston";
-import { initCart } from "../../controllers/cart/helpers";
+import { initCart } from "../../utils/helpers/cart";
 
 export const getUserInfo = async (ctx: ITelegramContext, next: Function) => {
   const session: any = ctx.session;

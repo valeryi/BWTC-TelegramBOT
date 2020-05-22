@@ -77,8 +77,8 @@
         "payment": {
             "paymentList": "Options to pay",
             "options": {
-                "privatBank": "Transfer to card 'PrivatBank'",
-                "novaPoshta": "Pay at receiving 'NovaPoshta'",
+                "privatBank": "Transfer to card «PrivatBank»",
+                "novaPoshta": "Pay at receiving «NovaPoshta»",
                 "pickup": "Pickup in Kiev",
                 "delivery": "Delivery around Kiev"
             },
