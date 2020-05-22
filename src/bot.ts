@@ -78,6 +78,8 @@ database.init().then(() => {
     }
   );
 
+  const PORT = process.env.PORT as unknown as number;
+
   //@ts-ignore
   bot.command("home", async (ctx: ITelegramContext) => ctx.scene.enter("home"));
 
@@ -87,6 +89,6 @@ database.init().then(() => {
   bot.startWebhook(
     "/1123799335:AAH4JyWrKUFlEkTIIClFF_GfQebGnfvwQYo",
     null,
-    5000
+    PORT 
   );
 });
