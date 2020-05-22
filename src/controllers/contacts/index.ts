@@ -16,9 +16,10 @@ contacts.enter(async (ctx: ITelegramContext) => {
     "Олейник Валентин"
   );
 
-  //@ts-ignore
-  await ctx.telegram.sendContact(ctx.chat?.id, +380938880808, "Богдан");
-
+  setTimeout(() => {
+    //@ts-ignore
+    ctx.telegram.sendContact(ctx.chat?.id, +380938880808, "Богдан");
+  }, 100);
 });
 
 contacts.leave(async (_: TelegrafContext) => {});
