@@ -55,7 +55,7 @@ database.init().then(() => {
     getProducts,
     updateUserActivity,
     (ctx: ITelegramContext) => {
-      ctx.reply("Раздел в разработке");
+      ctx.reply(ctx.i18n.t("system.underConstruction"));
     }
   );
 
@@ -78,7 +78,7 @@ database.init().then(() => {
     getProducts,
     updateUserActivity,
     (ctx: ITelegramContext) => {
-      ctx.reply("Раздел в разработке");
+      ctx.reply(ctx.i18n.t('system.underConstruction'));
     }
   );
 
@@ -87,23 +87,21 @@ database.init().then(() => {
   //@ts-ignore
   bot.command("home", async (ctx: ITelegramContext) => ctx.scene.enter("home"));
 
-  // bot.telegram.setWebhook("");
-  // bot.launch();
   bot.telegram.setWebhook(
     `https://fathomless-wave-38776.herokuapp.com/bot${process.env.TELEGRAM_TOKEN}`
   );
 
   server.use(bot.webhookCallback(`/bot${process.env.TELEGRAM_TOKEN}`));
 
-  server.get('/', (_, res)=> {
-    res.send('Hello, World!')
+  server.get("/", (_, res) => {
+    res.send("BTWC Telegram BOT!");
   });
-
-  // bot.startWebhook(`/${process.env.TELEGRAM_TOKEN}`);
 
   server.listen(PORT, () => {
     sysLog.info("Telegram Bot Server launched...");
   });
+
+  // bot.launch();
 
   // const webhookStatus = bot.telegram.getWebhookInfo();
 });
