@@ -27,10 +27,12 @@ payment.enter(
       ctx.i18n.t("toAction.chooseOptionToPay"),
       payment_list.draw()
     );
-    await ctx.reply(
-      ctx.i18n.t("scenes.payment.paymentList"),
-      new Keyboard().add(ctx.i18n.t("navigation.cancel")).draw()
-    );
+    setTimeout(() => {
+      ctx.reply(
+        ctx.i18n.t("scenes.payment.paymentList"),
+        new Keyboard().add(ctx.i18n.t("navigation.cancel")).draw()
+      );
+    }, 1000);
   }
 );
 
