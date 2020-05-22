@@ -78,7 +78,7 @@ database.init().then(() => {
     }
   );
 
-  // const PORT = process.env.PORT as unknown as number || 5000;
+  const PORT = process.env.PORT as unknown as number || 5000;
 
   //@ts-ignore
   bot.command("home", async (ctx: ITelegramContext) => ctx.scene.enter("home"));
@@ -86,11 +86,10 @@ database.init().then(() => {
   // bot.telegram.setWebhook("");
   // bot.launch();
   bot.telegram.setWebhook(
-    "https://fathomless-wave-38776.herokuapp.com/bot1123799335:AAH4JyWrKUFlEkTIIClFF_GfQebGnfvwQYo"
+    `https://fathomless-wave-38776.herokuapp.com:${PORT}/bot${process.env.TELEGRAM_TOKEN}`
   );
-  // bot.startWebhook(
-  //   "/1123799335:AAH4JyWrKUFlEkTIIClFF_GfQebGnfvwQYo",
-  //   null,
-  //   PORT
-  // );
+  bot.startWebhook(`/${process.env.TELEGRAM_TOKEN}`, null, PORT);
+
+  const webhookStatus = bot.telegram.getWebhookInfo();
+  console.log(webhookStatus);
 });
