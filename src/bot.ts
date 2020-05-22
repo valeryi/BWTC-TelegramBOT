@@ -43,8 +43,7 @@ database.init().then(() => {
     getUserInfo,
     updateUserActivity,
     async (ctx: ITelegramContext) => {
-      //@ts-ignore
-      bot.telegram.sendContact(ctx.chat?.id, +380631895794, "Олейник Валентин");
+      ctx.reply(ctx.i18n.t("system.underConstruction"));
     }
   );
 

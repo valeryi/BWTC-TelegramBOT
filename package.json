@@ -34,7 +34,7 @@
     "copy": "cpy src/templates/*.html dist/templates/ --no-overwrite",
     "dev": "npm run clear&&set NODE_ENV=DEVELOPMENT&&tsc-watch --onSuccess \"npm-run-all copy start\"",
     "build": "tsc",
-    "debug": "npm-run-all clear build copy",
+    "debug": "set NODE_ENV=DEVELOPMENT&&npm-run-all clear build copy",
     "heroku": "npm-run-all clear build copy start",
     "heroku:deploy": "git add . && git commit -m \"Heroku fixing\" && git push heroku master"
   },
