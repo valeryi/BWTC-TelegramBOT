@@ -24,12 +24,12 @@ payment.enter(
       .add(`${ctx.i18n.t("scenes.payment.options.delivery")}:Delivery`);
 
     await ctx.reply(
-      ctx.i18n.t("toAction.chooseOptionToPay"),
+      ctx.i18n.t("scenes.payment.paymentList"),
       payment_list.draw()
     );
     setTimeout(() => {
       ctx.reply(
-        ctx.i18n.t("scenes.payment.paymentList"),
+        ctx.i18n.t("toAction.chooseOptionToPay"),
         new Keyboard().add(ctx.i18n.t("navigation.cancel")).draw()
       );
     }, 1000);
