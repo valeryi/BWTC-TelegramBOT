@@ -86,7 +86,7 @@ database.init().then(() => {
   // bot.telegram.setWebhook("");
   // bot.launch();
   bot.telegram.setWebhook(
-    `https://fathomless-wave-38776.herokuapp.com:${PORT}/bot${process.env.TELEGRAM_TOKEN}`
+    `https://fathomless-wave-38776.herokuapp.com/bot${process.env.TELEGRAM_TOKEN}`
   );
   bot.startWebhook(`/${process.env.TELEGRAM_TOKEN}`, null, PORT);
 
