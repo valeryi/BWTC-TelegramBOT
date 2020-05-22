@@ -3,7 +3,7 @@ require("dotenv").config();
 import { Telegraf } from "telegraf";
 import { database } from "./db/mongoose";
 import { applyMiddlewares } from "./middlewares";
-import { sysLog } from "./utils/winston";
+// import { sysLog } from "./utils/winston";
 
 import { updateUserActivity } from "./middlewares/functional/updateUserActivity"; // TODO: Structure well - this is a common function
 import { ITelegramContext } from "./controllers/start";
@@ -81,5 +81,7 @@ database.init().then(() => {
   //@ts-ignore
   bot.command("home", async (ctx: ITelegramContext) => ctx.scene.enter("home"));
 
-  bot.launch().then(() => sysLog.info("Telegram BOT launched"));
+  // bot.launch().then(() => sysLog.info("Telegram BOT launched"));
+  bot.telegram.setWebhook("https://fathomless-wave-38776.herokuapp.com/");
+  bot.startWebhook("/secret-path", null, 5000);
 });
