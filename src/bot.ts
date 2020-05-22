@@ -82,8 +82,10 @@ database.init().then(() => {
   bot.command("home", async (ctx: ITelegramContext) => ctx.scene.enter("home"));
 
   // bot.launch().then(() => sysLog.info("Telegram BOT launched"));
-  bot.telegram.setWebhook(
-    "https://fathomless-wave-38776.herokuapp.com/1123799335:AAH4JyWrKUFlEkTIIClFF_GfQebGnfvwQYo"
+  bot.telegram.setWebhook("https://fathomless-wave-38776.herokuapp.com/");
+  bot.startWebhook(
+    "/1123799335:AAH4JyWrKUFlEkTIIClFF_GfQebGnfvwQYo",
+    null,
+    5000
   );
-  bot.startWebhook("/secret-path", null, 5000);
 });
