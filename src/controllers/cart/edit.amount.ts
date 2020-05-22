@@ -13,7 +13,7 @@ editAmount.enter(
   fetchCartItems,
   updateUserActivity,
   async (ctx: ITelegramContext) => {
-    ctx.reply(ctx.i18n.t("toAction.enterAmount"));
+    await ctx.reply(ctx.i18n.t("toAction.enterAmount"));
     editAmount.on("text", getUserInfo, async (ctx: ITelegramContext) => {
       //@ts-ignore
       const item_id = ctx.session.cart.correction;
