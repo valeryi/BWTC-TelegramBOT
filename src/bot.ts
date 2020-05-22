@@ -102,6 +102,4 @@ database.init().then(() => {
   });
 
   // bot.launch();
-
-  // const webhookStatus = bot.telegram.getWebhookInfo();
 });
