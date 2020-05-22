@@ -32,7 +32,7 @@
     "start": "node ./dist/bot.js",
     "clear": "rm -rf ./dist",
     "copy": "cpy src/templates/*.html dist/templates/ --no-overwrite",
-    "dev": "npm run clear&&tsc-watch --onSuccess \"npm-run-all copy start\"",
+    "dev": "npm run clear&&set NODE_ENV=DEVELOPMENT&&tsc-watch --onSuccess \"npm-run-all copy start\"",
     "build": "tsc",
     "debug": "npm-run-all clear build copy",
     "heroku": "npm-run-all clear build copy start",

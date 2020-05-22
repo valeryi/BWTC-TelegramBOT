@@ -4,19 +4,22 @@ import { Telegraf } from "telegraf";
 import express from "express";
 import { database } from "./db/mongoose";
 import { applyMiddlewares } from "./middlewares";
-import { sysLog } from "./utils/winston";
 
 import { updateUserActivity } from "./middlewares/functional/updateUserActivity"; // TODO: Structure well - this is a common function
 import { ITelegramContext } from "./controllers/start";
 import { getUserInfo } from "./middlewares/functional/getUserInfo";
 import { getProducts } from "./middlewares/functional/getProducts";
 import { errorHandler } from "./error handlers";
-// import { sysLog } from "./utils/winston";
-
-const server = express();
+import { launchDevMode, launchProdMode } from "./utils/launch.modes";
 
 database.init().then(() => {
-  const bot = new Telegraf(process.env.TELEGRAM_TOKEN as string);
+  const TOKEN =
+    process.env.NODE_ENV === "DEVELOPMENT"
+      ? (process.env.DEV_TOKEN as string)
+      : (process.env.TELEGRAM_TOKEN as string);
+
+  const server = express();
+  const bot = new Telegraf(TOKEN);
 
   applyMiddlewares(bot);
   errorHandler(bot);
@@ -41,11 +44,7 @@ database.init().then(() => {
     updateUserActivity,
     async (ctx: ITelegramContext) => {
       //@ts-ignore
-      bot.telegram.sendContact(
-        ctx.chat?.id,
-        +380631895794,
-        "Олейник Валентин"
-      );
+      bot.telegram.sendContact(ctx.chat?.id, +380631895794, "Олейник Валентин");
     }
   );
 
@@ -85,28 +84,14 @@ database.init().then(() => {
     getProducts,
     updateUserActivity,
     (ctx: ITelegramContext) => {
-      ctx.reply(ctx.i18n.t('system.underConstruction'));
+      ctx.reply(ctx.i18n.t("system.underConstruction"));
     }
   );
-
-  const PORT = ((process.env.PORT as unknown) as number) || 3000;
 
   //@ts-ignore
   bot.command("home", async (ctx: ITelegramContext) => ctx.scene.enter("home"));
 
-  bot.telegram.setWebhook(
-    `https://fathomless-wave-38776.herokuapp.com/bot${process.env.TELEGRAM_TOKEN}`
-  );
-
-  server.use(bot.webhookCallback(`/bot${process.env.TELEGRAM_TOKEN}`));
-
-  server.get("/", (_, res) => {
-    res.send("BTWC Telegram BOT!");
-  });
-
-  server.listen(PORT, () => {
-    sysLog.info("Telegram Bot Server launched...");
-  });
-
-  // bot.launch();
+  process.env.NODE_ENV === "DEVELOPMENT"
+    ? launchDevMode(bot, server)
+    : launchProdMode(bot, server, TOKEN);
 });
