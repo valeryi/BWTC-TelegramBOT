@@ -11,7 +11,7 @@
     "cpy-cli": "^3.1.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "moment": "^2.25.3",
+    "moment": "^2.29.2",
     "mongoose": "^5.9.13",
     "node-cron": "^2.0.3",
     "npm-run-all": "^4.1.5",
